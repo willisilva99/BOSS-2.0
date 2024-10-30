@@ -16,6 +16,9 @@ intents.members = True  # Necessário para acesso aos membros do servidor
 
 bot = commands.Bot(command_prefix="!", intents=intents)
 
+# Variável para controlar o tempo até a próxima atualização
+tempo_para_proxima_atualizacao = 10  # Em minutos
+
 # Definindo o dicionário de cargos
 CARGOS = {
     1: 1300853285858578543,  # Cargo para o 1º lugar
@@ -26,6 +29,7 @@ CARGOS = {
 class RankManager:
     @staticmethod
     async def update_rankings(bot):
+        global tempo_para_proxima_atualizacao
         guild = bot.get_guild(1186390028990025820)  # Substitua pelo ID do seu servidor
         if not guild:
             print("Guild não encontrado.")
@@ -54,17 +58,24 @@ class RankManager:
             else:
                 print(f"Usuário com ID {user_id} não encontrado no servidor.")
 
+        # Redefine o tempo para a próxima atualização
+        tempo_para_proxima_atualizacao = 10
+
 # Definindo a tarefa de atualização do ranking para rodar a cada 10 minutos
-@tasks.loop(minutes=10)
+@tasks.loop(minutes=1)
 async def update_ranking_task():
-    await RankManager.update_rankings(bot)
+    global tempo_para_proxima_atualizacao
+    if tempo_para_proxima_atualizacao <= 1:
+        await RankManager.update_rankings(bot)
+    else:
+        tempo_para_proxima_atualizacao -= 1
 
 @bot.event
 async def on_ready():
     print(f'{bot.user.name} está online!')
     await DatabaseManager.init_db()
     await bot.add_cog(BossBattle(bot))
-    update_ranking_task.start()  # Inicia a tarefa de atualização do ranking a cada 10 minutos
+    update_ranking_task.start()  # Inicia a tarefa de atualização a cada minuto, mas atualiza o ranking a cada 10 minutos
 
 @bot.command()
 async def ranking(ctx):
@@ -81,18 +92,18 @@ async def ranking(ctx):
         "é uma lenda viva do apocalipse!"
     ]
     
+    # Organizando o top 3 com cargos e mensagens personalizadas
     for i, (user_id, damage) in enumerate(top_players):
-        # Mensagem aleatória para os três primeiros
         congrat_message = random.choice(messages)
         
         if i == 0:
-            leaderboard += f"🥇 <@{user_id}> - {damage} dano (EXECUTOR BOSS) - {congrat_message}\n"
+            leaderboard += f"**🥇 1º Lugar**\n<@{user_id}> - {damage} dano\n**Cargo:** EXECUTOR BOSS\n_{congrat_message}_\n\n"
         elif i == 1:
-            leaderboard += f"🥈 <@{user_id}> - {damage} dano (VICIADO EM MORTES) - {congrat_message}\n"
+            leaderboard += f"**🥈 2º Lugar**\n<@{user_id}> - {damage} dano\n**Cargo:** VICIADO EM MORTES\n_{congrat_message}_\n\n"
         elif i == 2:
-            leaderboard += f"🥉 <@{user_id}> - {damage} dano (SNIPER BOSS) - {congrat_message}\n"
+            leaderboard += f"**🥉 3º Lugar**\n<@{user_id}> - {damage} dano\n**Cargo:** SNIPER BOSS\n_{congrat_message}_\n\n"
         else:
-            leaderboard += f"{i + 1}º <@{user_id}> - {damage} dano\n"
+            leaderboard += f"`{i + 1}º` <@{user_id}> - {damage} dano\n"
 
     embed = discord.Embed(
         title="📜 **A Nova Era do Poder** 📜",
@@ -118,6 +129,16 @@ async def atualizar_ranking(ctx):
         await ctx.send(embed=embed)
     else:
         await ctx.send("Você não tem permissão para executar este comando.")
+
+@bot.command()
+async def tempo_para_atualizar(ctx):
+    # Mostra o tempo restante para a próxima atualização
+    embed = discord.Embed(
+        title="⏳ **Tempo para a Próxima Atualização** ⏳",
+        description=f"Faltam **{tempo_para_proxima_atualizacao} minutos** para a próxima atualização automática do ranking.",
+        color=discord.Color.blue()
+    )
+    await ctx.send(embed=embed)
 
 # Inicia o bot com o token do Railway
 bot.run(TOKEN)
