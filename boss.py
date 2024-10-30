@@ -76,11 +76,19 @@ class BossBattle(commands.Cog):
         self.current_boss = None
         self.cooldowns = {}
         self.spawn_boss_task.start()  # Inicia o spawn automático dos bosses
+        self.fugiu = None  # Para controlar o tempo de reaparecimento após fuga
+        self.derrotado = None  # Para controlar o tempo de reaparecimento após derrota
 
-    @tasks.loop(hours=1)
+    @tasks.loop(minutes=1)
     async def spawn_boss_task(self):
         if self.current_boss:
-            return  # Se já existir um boss, espera até ser derrotado
+            return  # Se já existir um boss, espera até ser derrotado ou fugir
+
+        if self.fugiu is not None and asyncio.get_event_loop().time() < self.fugiu:
+            return  # Espera até o tempo de reaparecimento após fuga
+
+        if self.derrotado is not None and asyncio.get_event_loop().time() < self.derrotado:
+            return  # Espera até o tempo de reaparecimento após derrota
 
         self.current_boss = random.choice(list(self.BOSSES.keys()))
         boss = self.BOSSES[self.current_boss]
@@ -126,6 +134,7 @@ class BossBattle(commands.Cog):
             channel = ctx.channel
             await channel.send(embed=embed)
             self.current_boss = None
+            self.fugiu = asyncio.get_event_loop().time() + 600  # 10 minutos de espera
             return
 
         # Chance de o boss matar o jogador
@@ -155,6 +164,7 @@ class BossBattle(commands.Cog):
             await ctx.send(embed=embed)
             await DatabaseManager.add_damage(player_id, dano)
             self.current_boss = None  # Reset para o próximo boss
+            self.derrotado = asyncio.get_event_loop().time() + 1800  # 30 minutos de espera
         else:
             # Atualiza o dano do jogador
             await DatabaseManager.add_damage(player_id, dano)
