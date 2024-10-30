@@ -8,8 +8,10 @@ from rank import RankManager
 # Obtém o token do ambiente Railway
 TOKEN = os.getenv('TOKEN')
 
+# Configurando intents
 intents = discord.Intents.default()
 intents.message_content = True
+intents.members = True  # Necessário para acesso aos membros do servidor
 
 bot = commands.Bot(command_prefix="!", intents=intents)
 
@@ -24,20 +26,5 @@ async def on_ready():
     await bot.add_cog(BossBattle(bot))
     await RankManager.update_rankings(bot)  # Força uma atualização do ranking ao iniciar o bot
     update_ranking_task.start()
-
-
-@bot.command()
-async def ranking(ctx):
-    top_players = await DatabaseManager.get_top_players(10)
-    leaderboard = "\n".join([f"<@{user_id}> - {damage} dano" for user_id, damage in top_players])
-    await ctx.send(f"**Ranking de dano:**\n{leaderboard}")
-
-@bot.command()
-async def atualizar_ranking(ctx):
-    if ctx.author.id == 470628393272999948:  # Verifica se é o seu ID
-        await RankManager.update_rankings(bot)
-        await ctx.send("Ranking atualizado manualmente!")
-    else:
-        await ctx.send("Você não tem permissão para executar este comando.")
 
 bot.run(TOKEN)
