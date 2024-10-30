@@ -26,6 +26,18 @@ CARGOS = {
     3: 1300854639658270761,  # Cargo para o 3º lugar
 }
 
+class DatabaseManager:
+    # Outras funções...
+
+    @staticmethod
+    async def subtract_damage(player_id, damage_amount):
+        # Lógica para subtrair dano do jogador
+        async with some_database_connection as conn:  # Substitua pela sua lógica de conexão ao banco
+            await conn.execute(
+                "UPDATE players SET damage = damage - $1 WHERE id = $2",
+                damage_amount, player_id
+            )
+
 class RankManager:
     @staticmethod
     async def update_rankings(bot):
