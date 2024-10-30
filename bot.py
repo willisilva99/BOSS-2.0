@@ -1,11 +1,17 @@
+import os
 import discord
 from discord.ext import commands, tasks
 from database import DatabaseManager
 from boss import BossBattle
 from rank import RankManager
 
-TOKEN = 'YOUR_BOT_TOKEN'
-bot = commands.Bot(command_prefix="!")
+# Obtém o token do ambiente Railway
+TOKEN = os.getenv('TOKEN')
+
+intents = discord.Intents.default()
+intents.message_content = True
+
+bot = commands.Bot(command_prefix="!", intents=intents)
 
 @tasks.loop(minutes=10)
 async def update_ranking_task():
