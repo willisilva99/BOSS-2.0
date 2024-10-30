@@ -30,4 +30,12 @@ async def ranking(ctx):
     leaderboard = "\n".join([f"<@{user_id}> - {damage} dano" for user_id, damage in top_players])
     await ctx.send(f"**Ranking de dano:**\n{leaderboard}")
 
+@bot.command()
+async def atualizar_ranking(ctx):
+    if ctx.author.id == 470628393272999948:  # Verifica se é o seu ID
+        await RankManager.update_rankings(bot)
+        await ctx.send("Ranking atualizado manualmente!")
+    else:
+        await ctx.send("Você não tem permissão para executar este comando.")
+
 bot.run(TOKEN)
