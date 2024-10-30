@@ -4,7 +4,7 @@ import random
 from discord.ext import commands, tasks
 from database import DatabaseManager
 from boss import BossBattle
-from rank import RankManager
+from supremo_boss import SupremoBoss  # Importando a classe do boss supremo
 
 # Obtém o token do ambiente Railway
 TOKEN = os.getenv('TOKEN')
@@ -75,6 +75,7 @@ async def on_ready():
     print(f'{bot.user.name} está online!')
     await DatabaseManager.init_db()
     await bot.add_cog(BossBattle(bot))
+    await bot.add_cog(SupremoBoss(bot))  # Adicionando o boss supremo
     update_ranking_task.start()  # Inicia a tarefa de atualização a cada minuto, mas atualiza o ranking a cada 10 minutos
 
 @bot.command()
