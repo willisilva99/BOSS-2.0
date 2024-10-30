@@ -77,6 +77,7 @@ async def ranking(ctx):
         color=discord.Color.dark_red()
     )
     embed.add_field(name="**Ranking de dano**", value=leaderboard, inline=False)
+    embed.set_image(url="https://i.postimg.cc/662WxfTL/DALL-E-2024-10-30-17-58-02-Three-survivors-in-a-post-apocalyptic-world-standing-together-with-a-d.webp")
     embed.set_footer(text="Somente os mais fortes sobreviverão à Nova Era.")
     
     await ctx.send(embed=embed)
