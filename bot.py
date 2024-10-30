@@ -15,6 +15,13 @@ intents.members = True  # Necessário para acesso aos membros do servidor
 
 bot = commands.Bot(command_prefix="!", intents=intents)
 
+# Definindo o dicionário de cargos
+CARGOS = {
+    1: 1300853285858578543,  # Cargo para o 1º lugar
+    2: 1300850877585690655,  # Cargo para o 2º lugar
+    3: 1300854639658270761,  # Cargo para o 3º lugar
+}
+
 class RankManager:
     @staticmethod
     async def update_rankings(bot):
@@ -46,13 +53,17 @@ class RankManager:
             else:
                 print(f"Usuário com ID {user_id} não encontrado no servidor.")
 
+# Definindo a tarefa de atualização do ranking que roda a cada 10 minutos
+@tasks.loop(minutes=10)
+async def update_ranking_task():
+    await RankManager.update_rankings(bot)
 
 @bot.event
 async def on_ready():
     print(f'{bot.user.name} está online!')
     await DatabaseManager.init_db()
     await bot.add_cog(BossBattle(bot))
-    update_ranking_task.start()
+    update_ranking_task.start()  # Inicia a tarefa de atualização do ranking a cada 10 minutos
 
 @bot.command()
 async def ranking(ctx):
