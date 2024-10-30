@@ -53,8 +53,8 @@ class RankManager:
             else:
                 print(f"Usuário com ID {user_id} não encontrado no servidor.")
 
-# Definindo a tarefa de atualização do ranking que roda a cada 10 minutos
-@tasks.loop(minutes=10)
+# Definindo a tarefa de atualização do ranking para rodar a cada 2 minutos
+@tasks.loop(minutes=2)
 async def update_ranking_task():
     await RankManager.update_rankings(bot)
 
@@ -63,7 +63,7 @@ async def on_ready():
     print(f'{bot.user.name} está online!')
     await DatabaseManager.init_db()
     await bot.add_cog(BossBattle(bot))
-    update_ranking_task.start()  # Inicia a tarefa de atualização do ranking a cada 10 minutos
+    update_ranking_task.start()  # Inicia a tarefa de atualização do ranking a cada 2 minutos
 
 @bot.command()
 async def ranking(ctx):
@@ -79,7 +79,7 @@ async def atualizar_ranking(ctx):
         await RankManager.update_rankings(bot)
         await ctx.send("Ranking atualizado manualmente!")
     else:
-        await ctx.send("Você não tem permissão para executar este comando.")
+        await ctx.send("Você não tem permissão para executar este comando, Somente meu Criador!.")
 
 # Inicia o bot com o token do Railway
 bot.run(TOKEN)
