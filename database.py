@@ -31,3 +31,25 @@ class DatabaseManager:
         rows = await conn.fetch("SELECT user_id, damage FROM players ORDER BY damage DESC LIMIT $1", limit)
         await conn.close()
         return rows
+
+    @staticmethod
+    async def subtract_damage(user_id, damage):
+        conn = await asyncpg.connect(DATABASE_URL)
+        await conn.execute(
+            "UPDATE players SET damage = damage - $1 WHERE user_id = $2",
+            damage, user_id
+        )
+        await conn.close()
+
+    @staticmethod
+    async def get_player_data(user_id):
+        conn = await asyncpg.connect(DATABASE_URL)
+        row = await conn.fetchrow("SELECT user_id, damage FROM players WHERE user_id = $1", user_id)
+        await conn.close()
+        return row
+
+    @staticmethod
+    async def reset_damage():
+        conn = await asyncpg.connect(DATABASE_URL)
+        await conn.execute("UPDATE players SET damage = 0")
+        await conn.close()
