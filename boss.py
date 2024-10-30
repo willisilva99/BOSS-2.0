@@ -7,12 +7,12 @@ import discord
 class BossBattle(commands.Cog):
     BOSSES = {
         "Emberium": {
-            "vida": 15000,  # Aumentado
-            "chance_matar_jogador": 0.3,  # Aumentado
-            "chance_fugir": 0.05,  # Reduzido
-            "dano_contra_jogador": 1500,  # Aumentado
+            "vida": 15000,
+            "chance_matar_jogador": 0.3,
+            "chance_fugir": 0.05,
+            "dano_contra_jogador": 1500,
             "chance_ataque_sucesso": 0.3,
-            "cooldown": 3600,
+            "cooldown": 3600,  # 1 hora em segundos
             "images": {
                 "appear": "https://i.postimg.cc/3RSGN1ZK/DALL-E-2024-10-29-09-18-46-A-powerful-zombie-boss-named-Emberium-for-a-game-featuring-an-exagge.webp",
                 "attack": "https://i.postimg.cc/zfkKZ8bH/DALL-E-2024-10-29-09-21-49-A-powerful-zombie-boss-named-Emberium-inflicting-damage-on-a-player-i.webp",
@@ -28,10 +28,10 @@ class BossBattle(commands.Cog):
             ]
         },
         "Boss das Sombras": {
-            "vida": 13000,  # Aumentado
-            "chance_matar_jogador": 0.35,  # Aumentado
-            "chance_fugir": 0.1,  # Reduzido
-            "dano_contra_jogador": 1500,  # Aumentado
+            "vida": 13000,
+            "chance_matar_jogador": 0.35,
+            "chance_fugir": 0.1,
+            "dano_contra_jogador": 1500,
             "chance_ataque_sucesso": 0.3,
             "cooldown": 3600,
             "images": {
@@ -49,10 +49,10 @@ class BossBattle(commands.Cog):
             ]
         },
         "Mega Boss": {
-            "vida": 16000,  # Aumentado
-            "chance_matar_jogador": 0.4,  # Aumentado
-            "chance_fugir": 0.05,  # Reduzido
-            "dano_contra_jogador": 1500,  # Aumentado
+            "vida": 16000,
+            "chance_matar_jogador": 0.4,
+            "chance_fugir": 0.05,
+            "dano_contra_jogador": 1500,
             "chance_ataque_sucesso": 0.2,
             "cooldown": 3600,
             "images": {
