@@ -53,8 +53,8 @@ class RankManager:
             else:
                 print(f"Usuário com ID {user_id} não encontrado no servidor.")
 
-# Definindo a tarefa de atualização do ranking para rodar a cada 2 minutos
-@tasks.loop(minutes=2)
+# Definindo a tarefa de atualização do ranking para rodar a cada 10 minutos
+@tasks.loop(minutes=10)
 async def update_ranking_task():
     await RankManager.update_rankings(bot)
 
@@ -63,23 +63,37 @@ async def on_ready():
     print(f'{bot.user.name} está online!')
     await DatabaseManager.init_db()
     await bot.add_cog(BossBattle(bot))
-    update_ranking_task.start()  # Inicia a tarefa de atualização do ranking a cada 2 minutos
+    update_ranking_task.start()  # Inicia a tarefa de atualização do ranking a cada 10 minutos
 
 @bot.command()
 async def ranking(ctx):
-    # Exibe o top 10 do ranking de dano
+    # Exibe o top 10 do ranking de dano com embed
     top_players = await DatabaseManager.get_top_players(10)
     leaderboard = "\n".join([f"<@{user_id}> - {damage} dano" for user_id, damage in top_players])
-    await ctx.send(f"**Ranking de dano:**\n{leaderboard}")
+    
+    embed = discord.Embed(
+        title="📜 **A Nova Era do Poder** 📜",
+        description="Esses guerreiros se destacam na luta apocalíptica. A Nova Era os coroou com sangue e glória.",
+        color=discord.Color.dark_red()
+    )
+    embed.add_field(name="**Ranking de dano**", value=leaderboard, inline=False)
+    embed.set_footer(text="Somente os mais fortes sobreviverão à Nova Era.")
+    
+    await ctx.send(embed=embed)
 
 @bot.command()
 async def atualizar_ranking(ctx):
     # Força a atualização do ranking e cargos (somente para ID autorizado)
     if ctx.author.id == 470628393272999948:  # Verifica se é o seu ID (substitua pelo seu ID de usuário)
         await RankManager.update_rankings(bot)
-        await ctx.send("Ranking atualizado manualmente!")
+        embed = discord.Embed(
+            title="⚔️ **O Destino Foi Selado** ⚔️",
+            description="O ranking foi atualizado. A Nova Era saúda seus novos campeões.",
+            color=discord.Color.dark_red()
+        )
+        await ctx.send(embed=embed)
     else:
-        await ctx.send("Você não tem permissão para executar este comando, Somente meu Criador!.")
+        await ctx.send("Você não tem permissão para executar este comando.")
 
 # Inicia o bot com o token do Railway
 bot.run(TOKEN)
