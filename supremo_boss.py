@@ -12,14 +12,21 @@ class SupremoBoss(commands.Cog):
             "chance_fugir": 0.0,  # Não pode fugir
             "dano_contra_jogador": 2000,
             "images": {
-                "appear": "https://i.postimg.cc/3RSGN1ZK/DALL-E-2024-10-29-09-18-46-A-powerful-zombie-boss-named-Emberium-for-a-game-featuring-an-exagge.webp",
-                "attack": "https://i.postimg.cc/zfkKZ8bH/DALL-E-2024-10-29-09-21-49-A-powerful-zombie-boss-named-Emberium-inflicting-damage-on-a-player-i.webp",
-                "defeated": "https://i.postimg.cc/Kvdnt9hj/DALL-E-2024-10-29-09-41-47-A-dramatic-scene-depicting-a-powerful-zombie-boss-named-Emberium-lyin.webp",
+                "appear": "https://i.postimg.cc/6QptQDLg/DALL-E-2024-10-30-20-19-57-A-powerful-apocalyptic-boss-character-with-intricate-tattoos-inspired-b.webp",
+                "attack": "https://i.postimg.cc/Kc6G5px3/DALL-E-2024-10-29-09-21-24-A-powerful-zombie-boss-named-Emberium-inflicting-damage-on-a-player-i.webp",
+                "defeated": "https://i.postimg.cc/ZRQg4QV8/DALL-E-2024-10-29-09-41-47-A-dramatic-scene-depicting-a-powerful-zombie-boss-named-Emberium-lyin.webp",
+                "laugh": "https://i.postimg.cc/Sxrmky8c/DALL-E-2024-10-30-20-20-35-A-powerful-apocalyptic-boss-character-with-intricate-tattoos-inspired-b.webp",
+                "mock": "https://i.postimg.cc/hGSNrTXd/DALL-E-2024-10-30-20-34-15-A-colossal-apocalyptic-boss-character-with-intricate-tattoos-inspired-b.webp",
+                "mutate": "https://i.postimg.cc/DfJfL3kK/DALL-E-2024-10-30-20-26-29-A-colossal-apocalyptic-boss-character-with-intricate-tattoos-inspired-b.webp",
+                "fight": "https://i.postimg.cc/vZMGJ11Q/DALL-E-2024-10-30-20-22-02-A-powerful-apocalyptic-boss-character-with-intricate-tattoos-inspired-b.webp",
+                "drop": "https://i.postimg.cc/KzjwXbrc/DALL-E-2024-10-30-20-31-14-A-colossal-apocalyptic-boss-character-with-intricate-tattoos-inspired-b.webp",
             },
             "fala": [
                 "Olhem só para vocês! A Nova Era precisa de verdadeiros guerreiros!",
                 "Vocês acham que podem me vencer? Patéticos!",
                 "Vocês não são nada além de marionetes neste apocalipse!",
+                "Riam enquanto podem, logo vocês não existirão mais!",
+                "A derrota de vocês é o meu maior prazer!",
             ]
         }
     }
@@ -68,20 +75,10 @@ class SupremoBoss(commands.Cog):
         player_id = ctx.author.id
         current_time = asyncio.get_event_loop().time()
 
-        # Verifica o cooldown do jogador
-        if player_id in self.cooldowns and (self.cooldowns[player_id] + boss["cooldown"]) > current_time:
-            time_left = int((self.cooldowns[player_id] + boss["cooldown"] - current_time) / 60)
-            await ctx.send(f"⏳ {ctx.author.mention} você está em cooldown! Espere mais {time_left} minutos para atacar novamente.")
-            return
-
-        # Atualiza o cooldown do jogador
-        self.cooldowns[player_id] = current_time
-
         # Dano ao boss
         dano = random.randint(1, 400)  # Dano que o jogador pode causar ao boss supremo
         boss["vida"] -= dano
 
-        # Verifica se o boss supremo foi derrotado
         if boss["vida"] <= 0:
             await self.dropar_recompensa(ctx.author)  # Chama a função de recompensas
             embed = discord.Embed(
@@ -93,14 +90,12 @@ class SupremoBoss(commands.Cog):
             await ctx.send(embed=embed)
             self.current_boss = None  # Reset para o próximo boss
         else:
-            # Atualiza o dano do jogador
             await DatabaseManager.add_damage(player_id, dano)
             embed = discord.Embed(
                 title=f"{ctx.author.mention} atacou {boss['name']}!",
                 description=f"Causou {dano} de dano. Vida restante de {boss['name']}: {boss['vida']}",
                 color=discord.Color.orange()
             )
-            embed.set_image(url=boss["images"]["appear"])
             await ctx.send(embed=embed)
 
     async def dropar_recompensa(self, player):
