@@ -15,10 +15,37 @@ intents.members = True  # Necessário para acesso aos membros do servidor
 
 bot = commands.Bot(command_prefix="!", intents=intents)
 
-# Tarefa de atualização automática do ranking a cada 10 minutos
-@tasks.loop(minutes=10)
-async def update_ranking_task():
-    await RankManager.update_rankings(bot)
+class RankManager:
+    @staticmethod
+    async def update_rankings(bot):
+        guild = bot.get_guild(1186390028990025820)  # Substitua pelo ID do seu servidor
+        if not guild:
+            print("Guild não encontrado.")
+            return
+
+        top_players = await DatabaseManager.get_top_players(3)  # Obtém o top 3 jogadores
+
+        # Primeiro: Remover cargos antigos de todos os membros com esses cargos
+        for member in guild.members:
+            for cargo_id in CARGOS.values():
+                role = guild.get_role(cargo_id)
+                if role in member.roles:
+                    await member.remove_roles(role)
+                    print(f"Cargo {role.name} removido de {member.display_name}.")
+
+        # Segundo: Adicionar os cargos corretos para o novo top 3
+        for i, (user_id, damage) in enumerate(top_players):
+            member = guild.get_member(user_id)
+            if member:
+                cargo_id = CARGOS[i + 1]  # Cargo correspondente à posição no top 3
+                top_role = guild.get_role(cargo_id)
+
+                if top_role not in member.roles:
+                    await member.add_roles(top_role)
+                    print(f"Cargo {top_role.name} adicionado para {member.display_name}.")
+            else:
+                print(f"Usuário com ID {user_id} não encontrado no servidor.")
+
 
 @bot.event
 async def on_ready():
