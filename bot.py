@@ -1,5 +1,6 @@
 import os
 import discord
+import random
 from discord.ext import commands, tasks
 from database import DatabaseManager
 from boss import BossBattle
@@ -67,10 +68,32 @@ async def on_ready():
 
 @bot.command()
 async def ranking(ctx):
-    # Exibe o top 10 do ranking de dano com embed
+    # Exibe o top 10 do ranking de dano com embed e menções aos cargos dos três primeiros
     top_players = await DatabaseManager.get_top_players(10)
-    leaderboard = "\n".join([f"<@{user_id}> - {damage} dano" for user_id, damage in top_players])
+    leaderboard = ""
     
+    # Mensagens de parabéns para os três primeiros colocados
+    messages = [
+        "é um verdadeiro sobrevivente da Nova Era!",
+        "provou ser digno da glória apocalíptica!",
+        "se destaca entre os fortes nesta Nova Era!",
+        "mostrou ser indomável diante do caos!",
+        "é uma lenda viva do apocalipse!"
+    ]
+    
+    for i, (user_id, damage) in enumerate(top_players):
+        # Mensagem aleatória para os três primeiros
+        congrat_message = random.choice(messages)
+        
+        if i == 0:
+            leaderboard += f"🥇 <@{user_id}> - {damage} dano (EXECUTOR BOSS) - {congrat_message}\n"
+        elif i == 1:
+            leaderboard += f"🥈 <@{user_id}> - {damage} dano (VICIADO EM MORTES) - {congrat_message}\n"
+        elif i == 2:
+            leaderboard += f"🥉 <@{user_id}> - {damage} dano (SNIPER BOSS) - {congrat_message}\n"
+        else:
+            leaderboard += f"{i + 1}º <@{user_id}> - {damage} dano\n"
+
     embed = discord.Embed(
         title="📜 **A Nova Era do Poder** 📜",
         description="Esses guerreiros se destacam na luta apocalíptica. A Nova Era os coroou com sangue e glória.",
