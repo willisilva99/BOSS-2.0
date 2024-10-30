@@ -9,7 +9,7 @@ CARGOS = {
 class RankManager:
     @staticmethod
     async def update_rankings(bot):
-        guild = bot.get_guild(YOUR_GUILD_ID)
+        guild = bot.get_guild(1186390028990025820)  # Guild ID do seu servidor
         top_players = await DatabaseManager.get_top_players()
 
         for i, (user_id, damage) in enumerate(top_players):
