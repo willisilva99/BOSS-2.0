@@ -21,6 +21,7 @@ async def update_ranking_task():
 async def on_ready():
     print(f'{bot.user.name} está online!')
     await DatabaseManager.init_db()
+    await bot.add_cog(BossBattle(bot))  # Agora aguardando corretamente
     update_ranking_task.start()
 
 @bot.command()
@@ -29,5 +30,4 @@ async def ranking(ctx):
     leaderboard = "\n".join([f"<@{user_id}> - {damage} dano" for user_id, damage in top_players])
     await ctx.send(f"**Ranking de dano:**\n{leaderboard}")
 
-bot.add_cog(BossBattle(bot))
 bot.run(TOKEN)
