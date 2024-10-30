@@ -90,7 +90,7 @@ class BossBattle(commands.Cog):
             color=discord.Color.red()
         )
         embed.set_image(url=boss["images"]["appear"])
-        channel = self.bot.get_channel(YOUR_CHANNEL_ID)  # Substitua pelo ID do canal onde o boss aparece
+        channel = self.bot.get_channel(1299092242673303552)  # Substitua pelo ID do canal onde o boss aparece
         await channel.send(embed=embed)
 
     def zombar_jogadores(self):
