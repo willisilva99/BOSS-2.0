@@ -21,8 +21,10 @@ async def update_ranking_task():
 async def on_ready():
     print(f'{bot.user.name} está online!')
     await DatabaseManager.init_db()
-    await bot.add_cog(BossBattle(bot))  # Agora aguardando corretamente
+    await bot.add_cog(BossBattle(bot))
+    await RankManager.update_rankings(bot)  # Força uma atualização do ranking ao iniciar o bot
     update_ranking_task.start()
+
 
 @bot.command()
 async def ranking(ctx):
