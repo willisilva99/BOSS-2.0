@@ -12,17 +12,35 @@ class SupremoBoss(commands.Cog):
             "chance_fugir": 0.0,  # Não pode fugir
             "dano_contra_jogador": 2000,
             "images": {
-                "appear": "LINK_IMAGEM_ADMIN",  # Coloque o link da imagem
-                "attack": "LINK_IMAGEM_ADMIN_ATACANDO",  # Coloque o link da imagem
-                "defeated": "LINK_IMAGEM_ADMIN_DEFEAT",  # Coloque o link da imagem
+                "appear": "https://i.postimg.cc/3RSGN1ZK/DALL-E-2024-10-29-09-18-46-A-powerful-zombie-boss-named-Emberium-for-a-game-featuring-an-exagge.webp",
+                "attack": "https://i.postimg.cc/zfkKZ8bH/DALL-E-2024-10-29-09-21-49-A-powerful-zombie-boss-named-Emberium-inflicting-damage-on-a-player-i.webp",
+                "defeated": "https://i.postimg.cc/Kvdnt9hj/DALL-E-2024-10-29-09-41-47-A-dramatic-scene-depicting-a-powerful-zombie-boss-named-Emberium-lyin.webp",
             },
             "fala": [
-                "Eu sou o verdadeiro poder por trás deste apocalipse!",
-                "Vocês realmente acham que podem me derrotar?",
-                "Vamos ver o quanto vocês são realmente fortes!",
+                "Olhem só para vocês! A Nova Era precisa de verdadeiros guerreiros!",
+                "Vocês acham que podem me vencer? Patéticos!",
+                "Vocês não são nada além de marionetes neste apocalipse!",
             ]
         }
     }
+
+    ARMAS = [
+        {
+            "nome": "Sniper Boss Rara",
+            "imagem": "https://i.postimg.cc/50hC80DG/DALL-E-2024-10-29-10-21-27-A-rugged-survivor-in-an-apocalyptic-setting-holding-the-Emberium-Snip.webp",
+            "quebrada": "https://i.postimg.cc/mDz9cMpC/DALL-E-2024-10-29-10-23-18-A-rugged-survivor-in-an-apocalyptic-setting-holding-a-completely-shatt.webp",
+        },
+        {
+            "nome": "Sniper Emberium",
+            "imagem": "https://i.postimg.cc/nh2BNnQj/DALL-E-2024-10-29-10-24-23-A-rugged-survivor-in-an-apocalyptic-setting-confidently-wielding-the.webp",
+            "quebrada": "https://i.postimg.cc/1zzwQbpW/DALL-E-2024-10-29-10-31-58-A-rugged-survivor-in-an-apocalyptic-setting-holding-a-Sniper-Boss-Rar.webp",
+        },
+        {
+            "nome": "Sniper Damanty",
+            "imagem": "https://i.postimg.cc/qv42mNgH/DALL-E-2024-10-29-10-32-54-A-rugged-survivor-in-an-apocalyptic-setting-confidently-holding-the-S.webp",
+            "quebrada": "https://i.postimg.cc/MGrRKt5z/DALL-E-2024-10-29-10-33-40-A-rugged-survivor-in-an-apocalyptic-setting-holding-a-Sniper-Damanty.webp",
+        },
+    ]
 
     def __init__(self, bot):
         self.bot = bot
@@ -82,15 +100,29 @@ class SupremoBoss(commands.Cog):
                 description=f"Causou {dano} de dano. Vida restante de {boss['name']}: {boss['vida']}",
                 color=discord.Color.orange()
             )
-            embed.set_image(url=boss["images"]["running"])
+            embed.set_image(url=boss["images"]["appear"])
             await ctx.send(embed=embed)
 
     async def dropar_recompensa(self, player):
         # Lógica para dropar recompensas
-        recompensas = [
-            "Item raro",
-            "100 moedas",
-            "Armadura épica"
-        ]
-        recompensa = random.choice(recompensas)
-        await player.send(f"🎁 Você recebeu: {recompensa} ao derrotar o boss supremo!")
+        arma_selecionada = random.choice(self.ARMAS)
+        chance_quebrar = random.random() < 0.3  # 30% de chance de quebrar a arma
+
+        if chance_quebrar:
+            await player.send(f"🎁 Você recebeu: **{arma_selecionada['nome']}** (QUEBRADA)!\nImagem: {arma_selecionada['quebrada']}")
+            embed = discord.Embed(
+                title="⚔️ Arma Quebrada!",
+                description=f"Você recebeu uma **{arma_selecionada['nome']}**, mas ela está quebrada!",
+                color=discord.Color.red()
+            )
+            embed.set_image(url=arma_selecionada['quebrada'])
+        else:
+            await player.send(f"🎁 Você recebeu: **{arma_selecionada['nome']}**!\nImagem: {arma_selecionada['imagem']}")
+            embed = discord.Embed(
+                title="🏆 Arma Recebida!",
+                description=f"Você recebeu uma **{arma_selecionada['nome']}**!",
+                color=discord.Color.green()
+            )
+            embed.set_image(url=arma_selecionada['imagem'])
+
+        await player.send(embed=embed)
