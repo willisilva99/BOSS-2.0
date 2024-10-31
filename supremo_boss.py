@@ -22,11 +22,11 @@ class SupremoBoss(commands.Cog):
                 "drop": "https://i.postimg.cc/KzjwXbrc/DALL-E-2024-10-30-20-31-14-A-colossal-apocalyptic-boss-character-with-intricate-tattoos-inspired-b.webp",
             },
             "fala": [
+                "Olhem só para vocês! A Nova Era precisa de verdadeiros guerreiros!",
+                "Vocês acham que podem me vencer? Patéticos!",
+                "Vocês não são nada além de marionetes neste apocalipse!",
                 "Riam enquanto podem, logo vocês não existirão mais!",
-                "Patéticos! Vocês acham que podem me vencer?",
-                "Nada além de poeira e cinzas. Onde estão seus famosos títulos agora?",
-                "Meus olhos veem a sua fraqueza! A Nova Era é minha!",
-                "Ah, os guerreiros caídos! São tão... divertidos!",
+                "A derrota de vocês é o meu maior prazer!",
             ]
         }
     }
@@ -47,21 +47,11 @@ class SupremoBoss(commands.Cog):
             "imagem": "https://i.postimg.cc/qv42mNgH/DALL-E-2024-10-29-10-32-54-A-rugged-survivor-in-an-apocalyptic-setting-confidently-holding-the-S.webp",
             "quebrada": "https://i.postimg.cc/MGrRKt5z/DALL-E-2024-10-29-10-33-40-A-rugged-survivor-in-an-apocalyptic-setting-holding-a-Sniper-Damanty.webp",
         },
-        {
-            "nome": "Espada do Destino",
-            "imagem": "https://i.postimg.cc/Y0L7K2nK/destiny-sword.png",  # Adicione uma nova imagem aqui
-            "quebrada": "https://i.postimg.cc/XYZ123/broken-destiny-sword.png",  # Imagem quebrada
-        }
     ]
 
     def __init__(self, bot):
         self.bot = bot
         self.current_boss = None
-
-    @commands.command()
-    @commands.has_permissions(administrator=True)  # Permissão de administrador
-    async def spawn_admin(self, ctx):
-        await self.aparecer(ctx)
 
     async def aparecer(self, ctx):
         self.current_boss = "Admin"
@@ -89,10 +79,6 @@ class SupremoBoss(commands.Cog):
         dano = random.randint(1, 400)  # Dano que o jogador pode causar ao boss supremo
         boss["vida"] -= dano
 
-        # Mensagem do boss
-        if boss["vida"] > 0:
-            await ctx.send(f"{boss['name']} grita: 'Vocês realmente acham que podem me derrotar?'")
-
         if boss["vida"] <= 0:
             await self.dropar_recompensa(ctx.author)  # Chama a função de recompensas
             embed = discord.Embed(
@@ -110,7 +96,6 @@ class SupremoBoss(commands.Cog):
                 description=f"Causou {dano} de dano. Vida restante de {boss['name']}: {boss['vida']}",
                 color=discord.Color.orange()
             )
-            embed.set_image(url=boss["images"]["appear"])
             await ctx.send(embed=embed)
 
     async def dropar_recompensa(self, player):
@@ -119,6 +104,7 @@ class SupremoBoss(commands.Cog):
         chance_quebrar = random.random() < 0.3  # 30% de chance de quebrar a arma
 
         if chance_quebrar:
+            await player.send(f"🎁 Você recebeu: **{arma_selecionada['nome']}** (QUEBRADA)!\nImagem: {arma_selecionada['quebrada']}")
             embed = discord.Embed(
                 title="⚔️ Arma Quebrada!",
                 description=f"Você recebeu uma **{arma_selecionada['nome']}**, mas ela está quebrada!",
@@ -126,6 +112,7 @@ class SupremoBoss(commands.Cog):
             )
             embed.set_image(url=arma_selecionada['quebrada'])
         else:
+            await player.send(f"🎁 Você recebeu: **{arma_selecionada['nome']}**!\nImagem: {arma_selecionada['imagem']}")
             embed = discord.Embed(
                 title="🏆 Arma Recebida!",
                 description=f"Você recebeu uma **{arma_selecionada['nome']}**!",
@@ -134,6 +121,3 @@ class SupremoBoss(commands.Cog):
             embed.set_image(url=arma_selecionada['imagem'])
 
         await player.send(embed=embed)
-
-# Não esqueça de adicionar o cog ao bot principal
-bot.add_cog(SupremoBoss(bot))
