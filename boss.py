@@ -10,7 +10,7 @@ class BossBattle(commands.Cog):
             "vida": 15000,
             "chance_matar_jogador": 0.3,
             "chance_fugir": 0.05,
-            "dano_contra_jogador": 1500,
+            "dano_contra_jogador": 200,
             "chance_ataque_sucesso": 0.3,
             "cooldown": 3600,  # 1 hora em segundos
             "images": {
@@ -31,7 +31,7 @@ class BossBattle(commands.Cog):
             "vida": 13000,
             "chance_matar_jogador": 0.35,
             "chance_fugir": 0.1,
-            "dano_contra_jogador": 1500,
+            "dano_contra_jogador": 250,
             "chance_ataque_sucesso": 0.3,
             "cooldown": 3600,
             "images": {
@@ -52,7 +52,7 @@ class BossBattle(commands.Cog):
             "vida": 16000,
             "chance_matar_jogador": 0.4,
             "chance_fugir": 0.05,
-            "dano_contra_jogador": 1500,
+            "dano_contra_jogador": 280,
             "chance_ataque_sucesso": 0.2,
             "cooldown": 3600,
             "images": {
