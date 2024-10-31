@@ -150,7 +150,7 @@ class BossBattle(commands.Cog):
             return
 
         # Dano ao boss
-        dano = random.randint(1, 300)  # Dano reduzido
+        dano = random.randint(10, 2000)  # Dano reduzido
         boss["vida"] -= dano
 
         # Verifica se o boss foi derrotado
