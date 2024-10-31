@@ -22,11 +22,11 @@ class SupremoBoss(commands.Cog):
                 "drop": "https://i.postimg.cc/KzjwXbrc/DALL-E-2024-10-30-20-31-14-A-colossal-apocalyptic-boss-character-with-intricate-tattoos-inspired-b.webp",
             },
             "fala": [
-                "Olhem só para vocês! A Nova Era precisa de verdadeiros guerreiros!",
-                "Vocês acham que podem me vencer? Patéticos!",
-                "Vocês não são nada além de marionetes neste apocalipse!",
                 "Riam enquanto podem, logo vocês não existirão mais!",
-                "A derrota de vocês é o meu maior prazer!",
+                "Patéticos! Vocês acham que podem me vencer?",
+                "Nada além de poeira e cinzas. Onde estão seus famosos títulos agora?",
+                "Meus olhos veem a sua fraqueza! A Nova Era é minha!",
+                "Ah, os guerreiros caídos! São tão... divertidos!",
             ]
         }
     }
@@ -62,7 +62,7 @@ class SupremoBoss(commands.Cog):
             color=discord.Color.red()
         )
         embed.set_image(url=boss["images"]["appear"])
-        channel = self.bot.get_channel(1299092242673303552)  # ID do canal onde o boss aparece
+        channel = ctx.channel  # Envie a mensagem no canal onde o comando foi chamado
         await channel.send(embed=embed)
 
     @commands.command()
@@ -78,6 +78,11 @@ class SupremoBoss(commands.Cog):
         # Dano ao boss
         dano = random.randint(1, 400)  # Dano que o jogador pode causar ao boss supremo
         boss["vida"] -= dano
+
+        # Mensagem do boss
+        if boss["vida"] > 0:
+            await ctx.send(f"{boss['name']} grita: 'Vocês realmente acham que podem me derrotar?'")
+            await ctx.send(f"{boss['name']} ri: 'Vocês são tão fracos!'")
 
         if boss["vida"] <= 0:
             await self.dropar_recompensa(ctx.author)  # Chama a função de recompensas
@@ -104,7 +109,6 @@ class SupremoBoss(commands.Cog):
         chance_quebrar = random.random() < 0.3  # 30% de chance de quebrar a arma
 
         if chance_quebrar:
-            await player.send(f"🎁 Você recebeu: **{arma_selecionada['nome']}** (QUEBRADA)!\nImagem: {arma_selecionada['quebrada']}")
             embed = discord.Embed(
                 title="⚔️ Arma Quebrada!",
                 description=f"Você recebeu uma **{arma_selecionada['nome']}**, mas ela está quebrada!",
@@ -112,7 +116,6 @@ class SupremoBoss(commands.Cog):
             )
             embed.set_image(url=arma_selecionada['quebrada'])
         else:
-            await player.send(f"🎁 Você recebeu: **{arma_selecionada['nome']}**!\nImagem: {arma_selecionada['imagem']}")
             embed = discord.Embed(
                 title="🏆 Arma Recebida!",
                 description=f"Você recebeu uma **{arma_selecionada['nome']}**!",
