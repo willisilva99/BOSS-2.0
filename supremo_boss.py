@@ -62,7 +62,7 @@ class SupremoBoss(commands.Cog):
             color=discord.Color.red()
         )
         embed.set_image(url=boss["images"]["appear"])
-        channel = ctx.channel  # Envie a mensagem no canal onde o comando foi chamado
+        channel = ctx.channel  # Envia a mensagem no canal onde o comando foi chamado
         await channel.send(embed=embed)
 
     @commands.command()
@@ -73,7 +73,6 @@ class SupremoBoss(commands.Cog):
 
         boss = self.SUPREMO_BOSS[self.current_boss]
         player_id = ctx.author.id
-        current_time = asyncio.get_event_loop().time()
 
         # Dano ao boss
         dano = random.randint(1, 400)  # Dano que o jogador pode causar ao boss supremo
@@ -81,24 +80,26 @@ class SupremoBoss(commands.Cog):
 
         # Mensagem do boss
         if boss["vida"] > 0:
-            await ctx.send(f"{boss['name']} grita: 'Vocês realmente acham que podem me derrotar?'")
-            await ctx.send(f"{boss['name']} ri: 'Vocês são tão fracos!'")
+            await ctx.send(f"{self.current_boss} grita: 'Vocês realmente acham que podem me derrotar?'")
+            await ctx.send(f"{self.current_boss} ri: 'Vocês são tão fracos!'")
 
         if boss["vida"] <= 0:
             await self.dropar_recompensa(ctx.author)  # Chama a função de recompensas
             embed = discord.Embed(
-                title=f"{boss['name']} foi derrotado!",
+                title=f"{self.current_boss} foi derrotado!",
                 description=f"{ctx.author.mention} deu o golpe final! Vocês foram vitoriosos!",
                 color=discord.Color.green()
             )
             embed.set_image(url=boss["images"]["defeated"])
             await ctx.send(embed=embed)
             self.current_boss = None  # Reset para o próximo boss
+            # Chama a função de spawn dos bosses normais após a derrota
+            await self.bot.get_cog('BossBattle').spawn_boss_task()
         else:
             await DatabaseManager.add_damage(player_id, dano)
             embed = discord.Embed(
-                title=f"{ctx.author.mention} atacou {boss['name']}!",
-                description=f"Causou {dano} de dano. Vida restante de {boss['name']}: {boss['vida']}",
+                title=f"{ctx.author.mention} atacou {self.current_boss}!",
+                description=f"Causou {dano} de dano. Vida restante de {self.current_boss}: {boss['vida']}",
                 color=discord.Color.orange()
             )
             await ctx.send(embed=embed)

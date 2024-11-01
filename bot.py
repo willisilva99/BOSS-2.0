@@ -79,6 +79,23 @@ async def on_ready():
     update_ranking_task.start()  # Inicia a tarefa de atualização a cada minuto, mas atualiza o ranking a cada 10 minutos
 
 @bot.command()
+async def ajuda(ctx):
+    # Comando para exibir a ajuda com os comandos disponíveis
+    embed = discord.Embed(
+        title="Comandos Disponíveis",
+        description="Aqui está a lista de comandos que você pode usar:",
+        color=discord.Color.blue()
+    )
+    embed.add_field(name="!ajuda", value="Mostra esta mensagem de ajuda com a lista de comandos.", inline=False)
+    embed.add_field(name="!ranking", value="Exibe o top 10 do ranking de dano, com menção especial aos três primeiros.", inline=False)
+    embed.add_field(name="!atualizar_ranking", value="Força a atualização do ranking e cargos. **Somente o ID autorizado pode usar este comando**.", inline=False)
+    embed.add_field(name="!tempo_para_atualizar", value="Mostra o tempo restante para a próxima atualização automática do ranking.", inline=False)
+    embed.add_field(name="!invocar_supremo", value="Invoca manualmente o Supremo Boss para teste. **Somente o ID autorizado pode usar este comando**.", inline=False)
+    embed.set_footer(text="Se precisar de mais informações, entre em contato com o administrador.")
+    
+    await ctx.send(embed=embed)
+
+@bot.command()
 async def ranking(ctx):
     # Exibe o top 10 do ranking de dano com embed e menções aos cargos dos três primeiros
     top_players = await DatabaseManager.get_top_players(10)
@@ -140,6 +157,15 @@ async def tempo_para_atualizar(ctx):
         color=discord.Color.blue()
     )
     await ctx.send(embed=embed)
+
+@bot.command()
+async def invocar_supremo(ctx):
+    # Comando para invocar o Supremo Boss (restrito ao ID autorizado)
+    if ctx.author.id == 470628393272999948:  # Verifica se é o seu ID
+        await bot.get_cog('SupremoBoss').aparecer(ctx)
+        await ctx.send("Supremo Boss invocado com sucesso para teste!")
+    else:
+        await ctx.send("Você não tem permissão para usar este comando.")
 
 # Inicia o bot com o token do Railway
 bot.run(TOKEN)
