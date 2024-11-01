@@ -104,11 +104,21 @@ class BossBattle(commands.Cog):
     def zombar_jogadores(self):
         return "Olhem para vocês, criaturas frágeis! Não merecem nem o título de 'guerreiro'!"
 
-    @commands.command()
-    async def atacar(self, ctx):
-        if not self.current_boss:
-            await ctx.send("⚠️ Nenhum boss ativo no momento. Aguarde o próximo surgimento.")
-            return
+   @bot.command()
+async def atacar(ctx):
+    # Verifica se algum boss está ativo e direciona o comando para o boss correto
+    boss_battle_cog = bot.get_cog('BossBattle')
+    supremo_boss_cog = bot.get_cog('SupremoBoss')
+
+    if boss_battle_cog and boss_battle_cog.current_boss:
+        # Chama o método de ataque do BossBattle
+        await boss_battle_cog.atacar(ctx)
+    elif supremo_boss_cog and supremo_boss_cog.current_boss:
+        # Chama o método de ataque do SupremoBoss
+        await supremo_boss_cog.atacar_admin(ctx)
+    else:
+        await ctx.send("⚠️ Nenhum boss ativo no momento. Aguarde o próximo surgimento.")
+
 
         boss = self.BOSSES[self.current_boss]
         player_id = ctx.author.id
