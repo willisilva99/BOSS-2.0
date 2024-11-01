@@ -91,6 +91,7 @@ async def ajuda(ctx):
     embed.add_field(name="!atualizar_ranking", value="Força a atualização do ranking e cargos. **Somente o ID autorizado pode usar este comando**.", inline=False)
     embed.add_field(name="!tempo_para_atualizar", value="Mostra o tempo restante para a próxima atualização automática do ranking.", inline=False)
     embed.add_field(name="!invocar_supremo", value="Invoca manualmente o Supremo Boss para teste. **Somente o ID autorizado pode usar este comando**.", inline=False)
+    embed.add_field(name="!jitkill", value="Derrota instantaneamente o boss atual para testes. **Somente o ID autorizado pode usar este comando**.", inline=False)
     embed.set_footer(text="Se precisar de mais informações, entre em contato com o administrador.")
     
     await ctx.send(embed=embed)
@@ -164,6 +165,19 @@ async def invocar_supremo(ctx):
     if ctx.author.id == 470628393272999948:  # Verifica se é o seu ID
         await bot.get_cog('SupremoBoss').aparecer(ctx)
         await ctx.send("Supremo Boss invocado com sucesso para teste!")
+    else:
+        await ctx.send("Você não tem permissão para usar este comando.")
+
+@bot.command()
+async def jitkill(ctx):
+    # Comando para derrotar o boss instantaneamente (somente para testes e ID autorizado)
+    if ctx.author.id == 470628393272999948:  # Verifica se é o seu ID
+        boss_cog = bot.get_cog('BossBattle') or bot.get_cog('SupremoBoss')
+        if boss_cog and boss_cog.current_boss:
+            boss_cog.SUPREMO_BOSS[boss_cog.current_boss]["vida"] = 0  # Reduz a vida a 0
+            await ctx.send(f"O boss {boss_cog.current_boss} foi derrotado instantaneamente para testes!")
+        else:
+            await ctx.send("Nenhum boss ativo no momento.")
     else:
         await ctx.send("Você não tem permissão para usar este comando.")
 

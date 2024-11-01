@@ -62,8 +62,7 @@ class SupremoBoss(commands.Cog):
             color=discord.Color.red()
         )
         embed.set_image(url=boss["images"]["appear"])
-        channel = ctx.channel  # Envia a mensagem no canal onde o comando foi chamado
-        await channel.send(embed=embed)
+        await ctx.send(embed=embed)
 
     @commands.command()
     async def atacar_admin(self, ctx):
@@ -93,8 +92,8 @@ class SupremoBoss(commands.Cog):
             embed.set_image(url=boss["images"]["defeated"])
             await ctx.send(embed=embed)
             self.current_boss = None  # Reset para o próximo boss
-            # Chama a função de spawn dos bosses normais após a derrota
-            await self.bot.get_cog('BossBattle').spawn_boss_task()
+            # Reinicia o spawn dos bosses normais
+            await self.bot.get_cog('BossBattle').spawn_boss_task.restart()
         else:
             await DatabaseManager.add_damage(player_id, dano)
             embed = discord.Embed(

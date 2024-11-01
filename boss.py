@@ -157,14 +157,15 @@ class BossBattle(commands.Cog):
         if boss["vida"] <= 0:
             embed = discord.Embed(
                 title=f"{self.current_boss} foi derrotado!",
-                description=f"{ctx.author.mention} deu o golpe final! A Nova Era saúda um novo campeão!",
+                description=f"{ctx.author.mention} deu o golpe final! Preparem-se para o Supremo Boss!",
                 color=discord.Color.green()
             )
             embed.set_image(url=boss["images"]["defeated"])
             await ctx.send(embed=embed)
-            await DatabaseManager.add_damage(player_id, dano)
-            self.current_boss = None  # Reset para o próximo boss
-            self.derrotado = asyncio.get_event_loop().time() + 1800  # 30 minutos de espera
+            
+            # Reseta o boss normal e invoca o Supremo Boss
+            self.current_boss = None
+            await self.bot.get_cog('SupremoBoss').aparecer(ctx)  # Invoca o Supremo Boss
         else:
             # Atualiza o dano do jogador
             await DatabaseManager.add_damage(player_id, dano)
