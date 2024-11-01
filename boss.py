@@ -11,7 +11,6 @@ class BossBattle(commands.Cog):
             "chance_matar_jogador": 0.3,
             "chance_fugir": 0.05,
             "dano_contra_jogador": 200,
-            "chance_ataque_sucesso": 0.3,
             "cooldown": 3600,
             "images": {
                 "appear": "https://i.postimg.cc/3RSGN1ZK/DALL-E-2024-10-29-09-18-46-A-powerful-zombie-boss-named-Emberium-for-a-game-featuring-an-exagge.webp",
@@ -32,7 +31,6 @@ class BossBattle(commands.Cog):
             "chance_matar_jogador": 0.35,
             "chance_fugir": 0.1,
             "dano_contra_jogador": 250,
-            "chance_ataque_sucesso": 0.3,
             "cooldown": 3600,
             "images": {
                 "appear": "https://i.postimg.cc/zvQTt7Ld/DALL-E-2024-10-29-09-43-23-A-powerful-zombie-boss-known-as-Shadow-Boss-in-a-fantasy-game-setting.webp",
@@ -53,7 +51,6 @@ class BossBattle(commands.Cog):
             "chance_matar_jogador": 0.4,
             "chance_fugir": 0.05,
             "dano_contra_jogador": 280,
-            "chance_ataque_sucesso": 0.2,
             "cooldown": 3600,
             "images": {
                 "appear": "https://i.postimg.cc/W3CMSSq5/DALL-E-2024-10-29-09-49-34-A-powerful-fantasy-character-design-of-a-zombie-boss-named-Mega-Boss.webp",
@@ -75,9 +72,9 @@ class BossBattle(commands.Cog):
         self.bot = bot
         self.current_boss = None
         self.cooldowns = {}
-        self.spawn_boss_task.start()  # Inicia o spawn automático dos bosses
-        self.fugiu = None  # Para controlar o tempo de reaparecimento após fuga
-        self.derrotado = None  # Para controlar o tempo de reaparecimento após derrota
+        self.spawn_boss_task.start()
+        self.fugiu = None
+        self.derrotado = None
 
     @tasks.loop(minutes=1)
     async def spawn_boss_task(self):
@@ -106,7 +103,6 @@ class BossBattle(commands.Cog):
 
     @commands.command()
     async def atacar(self, ctx):
-        # Verifica se algum boss está ativo e direciona o comando para o boss correto
         boss_battle_cog = self.bot.get_cog('BossBattle')
         supremo_boss_cog = self.bot.get_cog('SupremoBoss')
 
@@ -121,7 +117,7 @@ class BossBattle(commands.Cog):
         boss = boss_battle_cog.BOSSES[boss_battle_cog.current_boss]
         player_id = ctx.author.id
         current_time = asyncio.get_event_loop().time()
-        
+
         # Verifica o cooldown do jogador
         if player_id in boss_battle_cog.cooldowns and (boss_battle_cog.cooldowns[player_id] + boss["cooldown"]) > current_time:
             time_left = int((boss_battle_cog.cooldowns[player_id] + boss["cooldown"] - current_time) / 60)
