@@ -172,14 +172,23 @@ async def invocar_supremo(ctx):
 async def jitkill(ctx):
     # Comando para derrotar o boss instantaneamente (somente para testes e ID autorizado)
     if ctx.author.id == 470628393272999948:  # Verifica se é o seu ID
-        boss_cog = bot.get_cog('BossBattle') or bot.get_cog('SupremoBoss')
-        if boss_cog and boss_cog.current_boss:
-            boss_cog.SUPREMO_BOSS[boss_cog.current_boss]["vida"] = 0  # Reduz a vida a 0
-            await ctx.send(f"O boss {boss_cog.current_boss} foi derrotado instantaneamente para testes!")
+        boss_battle_cog = bot.get_cog('BossBattle')
+        supremo_boss_cog = bot.get_cog('SupremoBoss')
+
+        # Verifica qual boss está ativo e ajusta a vida a 0
+        if boss_battle_cog and boss_battle_cog.current_boss:
+            boss = boss_battle_cog.BOSSES[boss_battle_cog.current_boss]
+            boss["vida"] = 0  # Reduz a vida do boss normal a 0
+            await ctx.send(f"O boss {boss_battle_cog.current_boss} foi derrotado instantaneamente para testes!")
+        elif supremo_boss_cog and supremo_boss_cog.current_boss:
+            boss = supremo_boss_cog.SUPREMO_BOSS[supremo_boss_cog.current_boss]
+            boss["vida"] = 0  # Reduz a vida do Supremo Boss a 0
+            await ctx.send(f"O Supremo Boss {supremo_boss_cog.current_boss} foi derrotado instantaneamente para testes!")
         else:
             await ctx.send("Nenhum boss ativo no momento.")
     else:
         await ctx.send("Você não tem permissão para usar este comando.")
+
 
 # Inicia o bot com o token do Railway
 bot.run(TOKEN)
