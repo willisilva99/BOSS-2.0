@@ -12,7 +12,7 @@ class BossBattle(commands.Cog):
             "chance_fugir": 0.05,
             "dano_contra_jogador": 200,
             "chance_ataque_sucesso": 0.3,
-            "cooldown": 3600,  # 1 hora em segundos
+            "cooldown": 3600,
             "images": {
                 "appear": "https://i.postimg.cc/3RSGN1ZK/DALL-E-2024-10-29-09-18-46-A-powerful-zombie-boss-named-Emberium-for-a-game-featuring-an-exagge.webp",
                 "attack": "https://i.postimg.cc/zfkKZ8bH/DALL-E-2024-10-29-09-21-49-A-powerful-zombie-boss-named-Emberium-inflicting-damage-on-a-player-i.webp",
@@ -104,54 +104,51 @@ class BossBattle(commands.Cog):
     def zombar_jogadores(self):
         return "Olhem para vocês, criaturas frágeis! Não merecem nem o título de 'guerreiro'!"
 
-   @bot.command()
-async def atacar(ctx):
-    # Verifica se algum boss está ativo e direciona o comando para o boss correto
-    boss_battle_cog = bot.get_cog('BossBattle')
-    supremo_boss_cog = bot.get_cog('SupremoBoss')
+    @commands.command()
+    async def atacar(self, ctx):
+        # Verifica se algum boss está ativo e direciona o comando para o boss correto
+        boss_battle_cog = self.bot.get_cog('BossBattle')
+        supremo_boss_cog = self.bot.get_cog('SupremoBoss')
 
-    if boss_battle_cog and boss_battle_cog.current_boss:
-        # Chama o método de ataque do BossBattle
-        await boss_battle_cog.atacar(ctx)
-    elif supremo_boss_cog and supremo_boss_cog.current_boss:
-        # Chama o método de ataque do SupremoBoss
-        await supremo_boss_cog.atacar_admin(ctx)
-    else:
-        await ctx.send("⚠️ Nenhum boss ativo no momento. Aguarde o próximo surgimento.")
+        if boss_battle_cog and boss_battle_cog.current_boss:
+            await self._atacar_boss_normal(ctx, boss_battle_cog)
+        elif supremo_boss_cog and supremo_boss_cog.current_boss:
+            await supremo_boss_cog.atacar_admin(ctx)
+        else:
+            await ctx.send("⚠️ Nenhum boss ativo no momento. Aguarde o próximo surgimento.")
 
-
-        boss = self.BOSSES[self.current_boss]
+    async def _atacar_boss_normal(self, ctx, boss_battle_cog):
+        boss = boss_battle_cog.BOSSES[boss_battle_cog.current_boss]
         player_id = ctx.author.id
         current_time = asyncio.get_event_loop().time()
         
         # Verifica o cooldown do jogador
-        if player_id in self.cooldowns and (self.cooldowns[player_id] + boss["cooldown"]) > current_time:
-            time_left = int((self.cooldowns[player_id] + boss["cooldown"] - current_time) / 60)
+        if player_id in boss_battle_cog.cooldowns and (boss_battle_cog.cooldowns[player_id] + boss["cooldown"]) > current_time:
+            time_left = int((boss_battle_cog.cooldowns[player_id] + boss["cooldown"] - current_time) / 60)
             await ctx.send(f"⏳ {ctx.author.mention} você está em cooldown! Espere mais {time_left} minutos para atacar novamente.")
             return
 
         # Atualiza o cooldown do jogador
-        self.cooldowns[player_id] = current_time
+        boss_battle_cog.cooldowns[player_id] = current_time
 
         # Chance do boss fugir
         if random.random() < boss["chance_fugir"]:
             embed = discord.Embed(
-                title=f"{self.current_boss} fugiu!",
+                title=f"{boss_battle_cog.current_boss} fugiu!",
                 description=f"O boss escapou das garras de {ctx.author.mention} e se escondeu nas sombras!",
                 color=discord.Color.purple()
             )
             embed.set_image(url=boss["images"]["running"])
-            channel = ctx.channel
-            await channel.send(embed=embed)
-            self.current_boss = None
-            self.fugiu = asyncio.get_event_loop().time() + 600  # 10 minutos de espera
+            await ctx.send(embed=embed)
+            boss_battle_cog.current_boss = None
+            boss_battle_cog.fugiu = asyncio.get_event_loop().time() + 600  # 10 minutos de espera
             return
 
         # Chance de o boss matar o jogador
         if random.random() < boss["chance_matar_jogador"]:
             await DatabaseManager.subtract_damage(player_id, boss["dano_contra_jogador"])
             embed = discord.Embed(
-                title=f"{self.current_boss} contra-atacou!",
+                title=f"{boss_battle_cog.current_boss} contra-atacou!",
                 description=f"{ctx.author.mention} foi derrotado e perdeu {boss['dano_contra_jogador']} pontos de dano acumulado!",
                 color=discord.Color.red()
             )
@@ -160,13 +157,13 @@ async def atacar(ctx):
             return
 
         # Dano ao boss
-        dano = random.randint(10, 2000)  # Dano reduzido
+        dano = random.randint(10, 2000)
         boss["vida"] -= dano
 
         # Verifica se o boss foi derrotado
         if boss["vida"] <= 0:
             embed = discord.Embed(
-                title=f"{self.current_boss} foi derrotado!",
+                title=f"{boss_battle_cog.current_boss} foi derrotado!",
                 description=f"{ctx.author.mention} deu o golpe final! Preparem-se para o Supremo Boss!",
                 color=discord.Color.green()
             )
@@ -174,14 +171,14 @@ async def atacar(ctx):
             await ctx.send(embed=embed)
             
             # Reseta o boss normal e invoca o Supremo Boss
-            self.current_boss = None
+            boss_battle_cog.current_boss = None
             await self.bot.get_cog('SupremoBoss').aparecer(ctx)  # Invoca o Supremo Boss
         else:
             # Atualiza o dano do jogador
             await DatabaseManager.add_damage(player_id, dano)
             embed = discord.Embed(
-                title=f"{ctx.author.mention} atacou {self.current_boss}!",
-                description=f"Causou {dano} de dano. Vida restante de {self.current_boss}: {boss['vida']}",
+                title=f"{ctx.author.mention} atacou {boss_battle_cog.current_boss}!",
+                description=f"Causou {dano} de dano. Vida restante de {boss_battle_cog.current_boss}: {boss['vida']}",
                 color=discord.Color.orange()
             )
             embed.set_image(url=boss["images"]["running"] if boss["vida"] < boss["vida"] / 2 else boss["images"]["appear"])
