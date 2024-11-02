@@ -68,6 +68,30 @@ class BossBattle(commands.Cog):
         }
     }
 
+    ARMAS = [
+        {
+            "nome": "Sniper Boss Rara",
+            "imagem": "https://i.postimg.cc/50hC80DG/DALL-E-2024-10-29-10-21-27-A-rugged-survivor-in-an-apocalyptic-setting-holding-the-Emberium-Snip.webp",
+            "quebrada": "https://i.postimg.cc/mDz9cMpC/DALL-E-2024-10-29-10-23-18-A-rugged-survivor-in-an-apocalyptic-setting-holding-a-completely-shatt.webp",
+            "chance_drop": 0.4,  # 40% de chance de dropar
+            "chance_quebrar": 0.3  # 30% de chance de quebrar
+        },
+        {
+            "nome": "Sniper Emberium",
+            "imagem": "https://i.postimg.cc/nh2BNnQj/DALL-E-2024-10-29-10-24-23-A-rugged-survivor-in-an-apocalyptic-setting-confidently-wielding-the.webp",
+            "quebrada": "https://i.postimg.cc/1zzwQbpW/DALL-E-2024-10-29-10-31-58-A-rugged-survivor-in-an-apocalyptic-setting-holding-a-Sniper-Boss-Rar.webp",
+            "chance_drop": 0.5,  # 50% de chance de dropar
+            "chance_quebrar": 0.2  # 20% de chance de quebrar
+        },
+        {
+            "nome": "Sniper Damanty",
+            "imagem": "https://i.postimg.cc/qv42mNgH/DALL-E-2024-10-29-10-32-54-A-rugged-survivor-in-an-apocalyptic-setting-confidently-holding-the-S.webp",
+            "quebrada": "https://i.postimg.cc/MGrRKt5z/DALL-E-2024-10-29-10-33-40-A-rugged-survivor-in-an-apocalyptic-setting-holding-a-Sniper-Damanty.webp",
+            "chance_drop": 0.3,  # 30% de chance de dropar
+            "chance_quebrar": 0.25  # 25% de chance de quebrar
+        },
+    ]
+
     def __init__(self, bot):
         self.bot = bot
         self.current_boss = None
@@ -163,8 +187,12 @@ class BossBattle(commands.Cog):
             embed.set_image(url=boss["images"]["defeated"])
             await ctx.send(embed=embed)
             
+            # Chama a função de recompensa
+            await self.dropar_recompensa(ctx.author)
+            
             # Reseta o boss normal
             boss_battle_cog.current_boss = None
+            boss_battle_cog.derrotado = asyncio.get_event_loop().time() + 600  # 10 minutos de espera
         else:
             # Atualiza o dano do jogador
             await DatabaseManager.add_damage(player_id, dano)
@@ -173,5 +201,32 @@ class BossBattle(commands.Cog):
                 description=f"Causou {dano} de dano. Vida restante de {boss_battle_cog.current_boss}: {boss['vida']}",
                 color=discord.Color.orange()
             )
-            embed.set_image(url=boss["images"]["running"] if boss["vida"] < boss["vida"] / 2 else boss["images"]["appear"])
+            embed.set_image(url=boss["images"]["running"] if boss["vida"] < (self.BOSSES[boss_battle_cog.current_boss]["vida"] / 2) else boss["images"]["appear"])
             await ctx.send(embed=embed)
+
+    async def dropar_recompensa(self, player):
+        arma_selecionada = random.choice(ARMAS)
+
+        # Verifica se a arma será dropada com base na chance de drop
+        if random.random() <= arma_selecionada["chance_drop"]:
+            # Verifica se a arma está quebrada com base na chance de quebra
+            if random.random() <= arma_selecionada["chance_quebrar"]:
+                embed = discord.Embed(
+                    title="⚔️ Arma Quebrada!",
+                    description=f"Você recebeu uma **{arma_selecionada['nome']}**, mas ela está quebrada!",
+                    color=discord.Color.red()
+                )
+                embed.set_image(url=arma_selecionada['quebrada'])
+            else:
+                embed = discord.Embed(
+                    title="🏆 Arma Recebida!",
+                    description=f"Você recebeu uma **{arma_selecionada['nome']}**!",
+                    color=discord.Color.green()
+                )
+                embed.set_image(url=arma_selecionada['imagem'])
+            try:
+                await player.send(embed=embed)
+            except discord.Forbidden:
+                await self.bot.get_channel(1299092242673303552).send(f"{player.mention}, você recebeu uma arma! Verifique seus DMs.")
+        else:
+            await player.send("Infelizmente, você não recebeu uma arma desta vez.")
