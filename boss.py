@@ -104,12 +104,9 @@ class BossBattle(commands.Cog):
     @commands.command()
     async def atacar(self, ctx):
         boss_battle_cog = self.bot.get_cog('BossBattle')
-        supremo_boss_cog = self.bot.get_cog('SupremoBoss')
 
         if boss_battle_cog and boss_battle_cog.current_boss:
             await self._atacar_boss_normal(ctx, boss_battle_cog)
-        elif supremo_boss_cog and supremo_boss_cog.current_boss:
-            await supremo_boss_cog.atacar_admin(ctx)
         else:
             await ctx.send("⚠️ Nenhum boss ativo no momento. Aguarde o próximo surgimento.")
 
@@ -160,15 +157,14 @@ class BossBattle(commands.Cog):
         if boss["vida"] <= 0:
             embed = discord.Embed(
                 title=f"{boss_battle_cog.current_boss} foi derrotado!",
-                description=f"{ctx.author.mention} deu o golpe final! Preparem-se para o Supremo Boss!",
+                description=f"{ctx.author.mention} deu o golpe final! Vocês foram vitoriosos!",
                 color=discord.Color.green()
             )
             embed.set_image(url=boss["images"]["defeated"])
             await ctx.send(embed=embed)
             
-            # Reseta o boss normal e invoca o Supremo Boss
+            # Reseta o boss normal
             boss_battle_cog.current_boss = None
-            await self.bot.get_cog('SupremoBoss').aparecer(ctx)  # Invoca o Supremo Boss
         else:
             # Atualiza o dano do jogador
             await DatabaseManager.add_damage(player_id, dano)
