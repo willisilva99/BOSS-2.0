@@ -53,4 +53,3 @@ class DatabaseManager:
         conn = await asyncpg.connect(DATABASE_URL)
         await conn.execute("UPDATE players SET damage = 0")
         await conn.close()
-
