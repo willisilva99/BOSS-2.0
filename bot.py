@@ -159,8 +159,14 @@ async def tempo_para_atualizar(ctx):
     )
     await ctx.send(embed=embed)
 
-
-
+@bot.command()
+async def resetar_danos(ctx):
+    # Somente o ID autorizado pode usar este comando
+    if ctx.author.id == 470628393272999948:  # Substitua pelo seu ID
+        await DatabaseManager.reset_damage()
+        await ctx.send("🗑️ Todos os danos dos jogadores foram redefinidos.")
+    else:
+        await ctx.send("Você não tem permissão para executar este comando.")
 
 # Inicia o bot com o token do Railway
 bot.run(TOKEN)
