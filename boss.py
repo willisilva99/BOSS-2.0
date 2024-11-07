@@ -23,7 +23,16 @@ class BossBattle(commands.Cog):
                 "Vocês são apenas cinzas neste mundo em ruínas!",
                 "Venham, tolos! Eu já vi o fim dos tempos, e não é nada comparado ao que vos espera!",
                 "Olhem para vocês, guerreiros! Nossos 'campeões' não passam de cinzas!",
-                "Quantos títulos vocês têm, mas a verdade é que nenhum deles os salvará de mim!"
+                "Quantos títulos vocês têm, mas a verdade é que nenhum deles os salvará de mim!",
+                "A sua bravura será sua ruína!",
+                "Vocês realmente acham que podem me derrotar? Preparem-se para serem queimados!",
+                "Seu destino está selado, e ele arderá em chamas!",
+                "Cuidado, %s! Eu sinto o medo emanando de você.",
+                "Apenas um tolo pensaria que pode me derrotar! Vocês são todos apenas carne para os vermes!",
+                "Eu vou descer a justiça sobre você, %s! Prepare-se!",
+                "Seu sofrimento será meu entretenimento!",
+                "Todos vocês são fracos e inúteis!",
+                "Eu posso sentir o desespero crescendo em você, %s."
             ]
         },
         "Boss das Sombras": {
@@ -43,7 +52,10 @@ class BossBattle(commands.Cog):
                 "Vocês não passam de sombras em meu reino!",
                 "Apenas ecos... vocês são os últimos suspiros deste mundo perdido!",
                 "Onde estão seus famosos títulos? Eles não têm poder contra mim!",
-                "Seus esforços são tão frágeis quanto o próprio mundo que vocês tentam salvar!"
+                "Seus esforços são tão frágeis quanto o próprio mundo que vocês tentam salvar!",
+                "Sentem medo, mortais? O vazio os aguarda!",
+                "Vocês nunca verão a luz novamente!",
+                "Preparem-se para serem devorados pelas sombras!"
             ]
         },
         "Mega Boss": {
@@ -63,7 +75,10 @@ class BossBattle(commands.Cog):
                 "O último som que ouvirão é o meu riso!",
                 "Perdidos e fracos... vocês não são nada diante de mim!",
                 "Títulos e conquistas não têm valor aqui. Preparem-se para serem obliterados!",
-                "Vocês acham que podem me vencer? Seus esforços são patéticos!"
+                "Vocês acham que podem me vencer? Seus esforços são patéticos!",
+                "Sinto a fraqueza em seus corações. Venham, eu os devorarei!",
+                "Preparem-se para um fim doloroso, mortais!",
+                "O caos é meu aliado, e vocês não têm chance!"
             ]
         }
     }
@@ -115,15 +130,27 @@ class BossBattle(commands.Cog):
         boss = self.BOSSES[self.current_boss]
         embed = discord.Embed(
             title=f"⚠️ {self.current_boss} apareceu!",
-            description=random.choice(boss["fala"]) + "\n" + self.zombar_jogadores(),
+            description=random.choice(boss["fala"]).replace("%s", "todos os jogadores!"),
             color=discord.Color.red()
         )
         embed.set_image(url=boss["images"]["appear"])
         channel = self.bot.get_channel(1299092242673303552)  # ID do canal onde o boss aparece
         await channel.send(embed=embed)
 
-    def zombar_jogadores(self):
-        return "Olhem para vocês, criaturas frágeis! Não merecem nem o título de 'guerreiro'!"
+        # Ataca aleatoriamente um jogador do ranking
+        await self.atacar_aleatorio_jogador()
+
+    async def atacar_aleatorio_jogador(self):
+        top_players = await DatabaseManager.get_top_players(10)
+        if top_players:
+            user_id, _ = random.choice(top_players)
+            embed = discord.Embed(
+                title=f"{self.current_boss} ataca!",
+                description=f"O boss {self.current_boss} atacou <@{user_id}> e selou suas vidas!",
+                color=discord.Color.orange()
+            )
+            await self.bot.get_channel(1299092242673303552).send(embed=embed)
+            await DatabaseManager.subtract_damage(user_id, 100)  # Reduz 100 pontos de dano
 
     @commands.command()
     async def atacar(self, ctx):
@@ -205,7 +232,7 @@ class BossBattle(commands.Cog):
             await ctx.send(embed=embed)
 
     async def dropar_recompensa(self, player):
-        arma_selecionada = random.choice(ARMAS)
+        arma_selecionada = random.choice(self.ARMAS)
 
         # Verifica se a arma será dropada com base na chance de drop
         if random.random() <= arma_selecionada["chance_drop"]:
