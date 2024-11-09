@@ -8,8 +8,10 @@ class BossBattle(commands.Cog):
     BOSSES = {
         "Emberium": {
             "vida": 15000,
+            "vida_maxima": 15000,
             "chance_matar_jogador": 0.3,
             "chance_fugir": 0.05,
+            "chance_curar": 0.1,
             "dano_contra_jogador": 200,
             "cooldown": 3600,
             "images": {
@@ -21,24 +23,22 @@ class BossBattle(commands.Cog):
             "fala": [
                 "Quem ousa enfrentar Emberium, o soberano das chamas da devastação?",
                 "Vocês são apenas cinzas neste mundo em ruínas!",
-                "Venham, tolos! Eu já vi o fim dos tempos, e não é nada comparado ao que vos espera!",
-                "Olhem para vocês, guerreiros! Nossos 'campeões' não passam de cinzas!",
-                "Quantos títulos vocês têm, mas a verdade é que nenhum deles os salvará de mim!",
-                "A sua bravura será sua ruína!",
-                "Vocês realmente acham que podem me derrotar? Preparem-se para serem queimados!",
-                "Seu destino está selado, e ele arderá em chamas!",
-                "Cuidado, %s! Eu sinto o medo emanando de você.",
-                "Apenas um tolo pensaria que pode me derrotar! Vocês são todos apenas carne para os vermes!",
-                "Eu vou descer a justiça sobre você, %s! Prepare-se!",
-                "Seu sofrimento será meu entretenimento!",
-                "Todos vocês são fracos e inúteis!",
-                "Eu posso sentir o desespero crescendo em você, %s."
+                "Eu sou o fim de todos vocês!",
+                "Vocês gritam em vão! Eu sou inevitável.",
+                "Queimem, fracos! Vocês são nada!"
+            ],
+            "insultos": [
+                "%s, você luta como uma criança!",
+                "Eu sinto o medo em você, %s.",
+                "Patético, %s! Achei que seria mais difícil."
             ]
         },
         "Boss das Sombras": {
             "vida": 13000,
+            "vida_maxima": 13000,
             "chance_matar_jogador": 0.35,
             "chance_fugir": 0.1,
+            "chance_curar": 0.15,
             "dano_contra_jogador": 250,
             "cooldown": 3600,
             "images": {
@@ -49,19 +49,23 @@ class BossBattle(commands.Cog):
             },
             "fala": [
                 "Das sombras, eu surjo... preparados para a verdadeira escuridão?",
-                "Vocês não passam de sombras em meu reino!",
-                "Apenas ecos... vocês são os últimos suspiros deste mundo perdido!",
-                "Onde estão seus famosos títulos? Eles não têm poder contra mim!",
-                "Seus esforços são tão frágeis quanto o próprio mundo que vocês tentam salvar!",
-                "Sentem medo, mortais? O vazio os aguarda!",
-                "Vocês nunca verão a luz novamente!",
-                "Preparem-se para serem devorados pelas sombras!"
+                "Vocês são apenas ecos perdidos neste mundo esquecido.",
+                "Eu sou o pesadelo encarnado!",
+                "A escuridão consome a todos, inclusive vocês!",
+                "Vocês nunca escaparão das sombras!"
+            ],
+            "insultos": [
+                "Vai desaparecer no vazio como todos os outros, %s!",
+                "Eu estou em todos os lugares, %s. Sinta o terror crescer!",
+                "%s, você parece tão fraco... que decepção."
             ]
         },
         "Mega Boss": {
             "vida": 16000,
+            "vida_maxima": 16000,
             "chance_matar_jogador": 0.4,
             "chance_fugir": 0.05,
+            "chance_curar": 0.2,
             "dano_contra_jogador": 280,
             "cooldown": 3600,
             "images": {
@@ -72,13 +76,15 @@ class BossBattle(commands.Cog):
             },
             "fala": [
                 "Eu sou o colosso, o peso de um mundo destruído!",
-                "O último som que ouvirão é o meu riso!",
+                "Preparem-se para o colapso absoluto!",
                 "Perdidos e fracos... vocês não são nada diante de mim!",
-                "Títulos e conquistas não têm valor aqui. Preparem-se para serem obliterados!",
                 "Vocês acham que podem me vencer? Seus esforços são patéticos!",
-                "Sinto a fraqueza em seus corações. Venham, eu os devorarei!",
-                "Preparem-se para um fim doloroso, mortais!",
-                "O caos é meu aliado, e vocês não têm chance!"
+                "Preparem-se para serem esmagados, mortais."
+            ],
+            "insultos": [
+                "Vou esmagar você como uma barata, %s!",
+                "%s, você é apenas uma sombra do que poderia ser!",
+                "Seu fim está próximo, %s. Apenas aceite a derrota!"
             ]
         }
     }
@@ -88,22 +94,22 @@ class BossBattle(commands.Cog):
             "nome": "Sniper Boss Rara",
             "imagem": "https://i.postimg.cc/50hC80DG/DALL-E-2024-10-29-10-21-27-A-rugged-survivor-in-an-apocalyptic-setting-holding-the-Emberium-Snip.webp",
             "quebrada": "https://i.postimg.cc/mDz9cMpC/DALL-E-2024-10-29-10-23-18-A-rugged-survivor-in-an-apocalyptic-setting-holding-a-completely-shatt.webp",
-            "chance_drop": 0.4,  # 40% de chance de dropar
-            "chance_quebrar": 0.3  # 30% de chance de quebrar
+            "chance_drop": 0.4,
+            "chance_quebrar": 0.3
         },
         {
             "nome": "Sniper Emberium",
             "imagem": "https://i.postimg.cc/nh2BNnQj/DALL-E-2024-10-29-10-24-23-A-rugged-survivor-in-an-apocalyptic-setting-confidently-wielding-the.webp",
             "quebrada": "https://i.postimg.cc/1zzwQbpW/DALL-E-2024-10-29-10-31-58-A-rugged-survivor-in-an-apocalyptic-setting-holding-a-Sniper-Boss-Rar.webp",
-            "chance_drop": 0.5,  # 50% de chance de dropar
-            "chance_quebrar": 0.2  # 20% de chance de quebrar
+            "chance_drop": 0.5,
+            "chance_quebrar": 0.2
         },
         {
             "nome": "Sniper Damanty",
             "imagem": "https://i.postimg.cc/qv42mNgH/DALL-E-2024-10-29-10-32-54-A-rugged-survivor-in-an-apocalyptic-setting-confidently-holding-the-S.webp",
             "quebrada": "https://i.postimg.cc/MGrRKt5z/DALL-E-2024-10-29-10-33-40-A-rugged-survivor-in-an-apocalyptic-setting-holding-a-Sniper-Damanty.webp",
-            "chance_drop": 0.3,  # 30% de chance de dropar
-            "chance_quebrar": 0.25  # 25% de chance de quebrar
+            "chance_drop": 0.3,
+            "chance_quebrar": 0.25
         },
     ]
 
@@ -117,126 +123,52 @@ class BossBattle(commands.Cog):
 
     @tasks.loop(minutes=1)
     async def spawn_boss_task(self):
-        if self.current_boss:
-            return  # Se já existir um boss, espera até ser derrotado ou fugir
-
-        if self.fugiu is not None and asyncio.get_event_loop().time() < self.fugiu:
-            return  # Espera até o tempo de reaparecimento após fuga
-
-        if self.derrotado is not None and asyncio.get_event_loop().time() < self.derrotado:
-            return  # Espera até o tempo de reaparecimento após derrota
+        if self.current_boss or (self.fugiu and asyncio.get_event_loop().time() < self.fugiu) or (self.derrotado and asyncio.get_event_loop().time() < self.derrotado):
+            return
 
         self.current_boss = random.choice(list(self.BOSSES.keys()))
         boss = self.BOSSES[self.current_boss]
+        boss["vida"] = boss["vida_maxima"]
         embed = discord.Embed(
             title=f"⚠️ {self.current_boss} apareceu!",
             description=random.choice(boss["fala"]).replace("%s", "todos os jogadores!"),
             color=discord.Color.red()
         )
         embed.set_image(url=boss["images"]["appear"])
-        channel = self.bot.get_channel(1299092242673303552)  # ID do canal onde o boss aparece
+        channel = self.bot.get_channel(1299092242673303552)
         await channel.send(embed=embed)
-
-        # Ataca aleatoriamente um jogador do ranking
         await self.atacar_aleatorio_jogador()
 
     async def atacar_aleatorio_jogador(self):
         top_players = await DatabaseManager.get_top_players(10)
         if top_players:
             user_id, _ = random.choice(top_players)
-            embed = discord.Embed(
-                title=f"{self.current_boss} ataca!",
-                description=f"O boss {self.current_boss} atacou <@{user_id}> e selou suas vidas!",
-                color=discord.Color.orange()
-            )
-            await self.bot.get_channel(1299092242673303552).send(embed=embed)
-            await DatabaseManager.subtract_damage(user_id, 100)  # Reduz 100 pontos de dano
+            boss = self.BOSSES[self.current_boss]
 
-    @commands.command()
-    async def atacar(self, ctx):
-        boss_battle_cog = self.bot.get_cog('BossBattle')
+            insulto = random.choice(boss["insultos"]).replace("%s", f"<@{user_id}>")
+            await self.bot.get_channel(1299092242673303552).send(insulto)
 
-        if boss_battle_cog and boss_battle_cog.current_boss:
-            await self._atacar_boss_normal(ctx, boss_battle_cog)
-        else:
-            await ctx.send("⚠️ Nenhum boss ativo no momento. Aguarde o próximo surgimento.")
+            if random.random() < boss["chance_matar_jogador"]:
+                await DatabaseManager.subtract_damage(user_id, boss["dano_contra_jogador"])
+                embed = discord.Embed(
+                    title=f"{self.current_boss} contra-atacou!",
+                    description=f"O boss {self.current_boss} atacou e derrotou <@{user_id}>. Eles perderam {boss['dano_contra_jogador']} pontos de dano acumulado!",
+                    color=discord.Color.red()
+                )
+                embed.set_image(url=boss["images"]["attack"])
+                await self.bot.get_channel(1299092242673303552).send(embed=embed)
 
-    async def _atacar_boss_normal(self, ctx, boss_battle_cog):
-        boss = boss_battle_cog.BOSSES[boss_battle_cog.current_boss]
-        player_id = ctx.author.id
-        current_time = asyncio.get_event_loop().time()
-
-        # Verifica o cooldown do jogador
-        if player_id in boss_battle_cog.cooldowns and (boss_battle_cog.cooldowns[player_id] + boss["cooldown"]) > current_time:
-            time_left = int((boss_battle_cog.cooldowns[player_id] + boss["cooldown"] - current_time) / 60)
-            await ctx.send(f"⏳ {ctx.author.mention} você está em cooldown! Espere mais {time_left} minutos para atacar novamente.")
-            return
-
-        # Atualiza o cooldown do jogador
-        boss_battle_cog.cooldowns[player_id] = current_time
-
-        # Chance do boss fugir
-        if random.random() < boss["chance_fugir"]:
-            embed = discord.Embed(
-                title=f"{boss_battle_cog.current_boss} fugiu!",
-                description=f"O boss escapou das garras de {ctx.author.mention} e se escondeu nas sombras!",
-                color=discord.Color.purple()
-            )
-            embed.set_image(url=boss["images"]["running"])
-            await ctx.send(embed=embed)
-            boss_battle_cog.current_boss = None
-            boss_battle_cog.fugiu = asyncio.get_event_loop().time() + 600  # 10 minutos de espera
-            return
-
-        # Chance de o boss matar o jogador
-        if random.random() < boss["chance_matar_jogador"]:
-            await DatabaseManager.subtract_damage(player_id, boss["dano_contra_jogador"])
-            embed = discord.Embed(
-                title=f"{boss_battle_cog.current_boss} contra-atacou!",
-                description=f"{ctx.author.mention} foi derrotado e perdeu {boss['dano_contra_jogador']} pontos de dano acumulado!",
-                color=discord.Color.red()
-            )
-            embed.set_image(url=boss["images"]["attack"])
-            await ctx.send(embed=embed)
-            return
-
-        # Dano ao boss
-        dano = random.randint(10, 2000)
-        boss["vida"] -= dano
-
-        # Verifica se o boss foi derrotado
-        if boss["vida"] <= 0:
-            embed = discord.Embed(
-                title=f"{boss_battle_cog.current_boss} foi derrotado!",
-                description=f"{ctx.author.mention} deu o golpe final! Vocês foram vitoriosos!",
-                color=discord.Color.green()
-            )
-            embed.set_image(url=boss["images"]["defeated"])
-            await ctx.send(embed=embed)
-            
-            # Chama a função de recompensa
-            await self.dropar_recompensa(ctx.author)
-            
-            # Reseta o boss normal
-            boss_battle_cog.current_boss = None
-            boss_battle_cog.derrotado = asyncio.get_event_loop().time() + 600  # 10 minutos de espera
-        else:
-            # Atualiza o dano do jogador
-            await DatabaseManager.add_damage(player_id, dano)
-            embed = discord.Embed(
-                title=f"{ctx.author.mention} atacou {boss_battle_cog.current_boss}!",
-                description=f"Causou {dano} de dano. Vida restante de {boss_battle_cog.current_boss}: {boss['vida']}",
-                color=discord.Color.orange()
-            )
-            embed.set_image(url=boss["images"]["running"] if boss["vida"] < (self.BOSSES[boss_battle_cog.current_boss]["vida"] / 2) else boss["images"]["appear"])
-            await ctx.send(embed=embed)
+    async def curar_boss(self):
+        boss = self.BOSSES[self.current_boss]
+        if random.random() < boss["chance_curar"]:
+            cura = random.randint(500, 1500)
+            boss["vida"] = min(boss["vida_maxima"], boss["vida"] + cura)
+            await self.bot.get_channel(1299092242673303552).send(f"⚠️ {self.current_boss} usou seus poderes para se curar, regenerando {cura} de vida!")
 
     async def dropar_recompensa(self, player):
         arma_selecionada = random.choice(self.ARMAS)
 
-        # Verifica se a arma será dropada com base na chance de drop
         if random.random() <= arma_selecionada["chance_drop"]:
-            # Verifica se a arma está quebrada com base na chance de quebra
             if random.random() <= arma_selecionada["chance_quebrar"]:
                 embed = discord.Embed(
                     title="⚔️ Arma Quebrada!",
@@ -247,13 +179,84 @@ class BossBattle(commands.Cog):
             else:
                 embed = discord.Embed(
                     title="🏆 Arma Recebida!",
-                    description=f"Você recebeu uma **{arma_selecionada['nome']}**!",
+                    description=f"Você recebeu uma **{arma_selecionada['nome']}** em perfeito estado!",
                     color=discord.Color.green()
                 )
                 embed.set_image(url=arma_selecionada['imagem'])
+
             try:
                 await player.send(embed=embed)
             except discord.Forbidden:
                 await self.bot.get_channel(1299092242673303552).send(f"{player.mention}, você recebeu uma arma! Verifique seus DMs.")
         else:
             await player.send("Infelizmente, você não recebeu uma arma desta vez.")
+
+    @commands.command()
+    async def atacar(self, ctx):
+        if self.current_boss:
+            await self._atacar_boss_normal(ctx)
+        else:
+            await ctx.send("⚠️ Nenhum boss ativo no momento. Aguarde o próximo surgimento.")
+
+    async def _atacar_boss_normal(self, ctx):
+        boss = self.BOSSES[self.current_boss]
+        player_id = ctx.author.id
+        current_time = asyncio.get_event_loop().time()
+
+        if player_id in self.cooldowns and (self.cooldowns[player_id] + boss["cooldown"]) > current_time:
+            time_left = int((self.cooldowns[player_id] + boss["cooldown"] - current_time) / 60)
+            await ctx.send(f"⏳ {ctx.author.mention} você está em cooldown! Espere mais {time_left} minutos para atacar novamente.")
+            return
+
+        self.cooldowns[player_id] = current_time
+
+        if random.random() < boss["chance_fugir"]:
+            embed = discord.Embed(
+                title=f"{self.current_boss} fugiu!",
+                description=f"O boss escapou das garras de {ctx.author.mention} e se escondeu nas sombras!",
+                color=discord.Color.purple()
+            )
+            embed.set_image(url=boss["images"]["running"])
+            await ctx.send(embed=embed)
+            self.current_boss = None
+            self.fugiu = asyncio.get_event_loop().time() + 600
+            return
+
+        await self.curar_boss()
+
+        if random.random() < boss["chance_matar_jogador"]:
+            await DatabaseManager.subtract_damage(player_id, boss["dano_contra_jogador"])
+            embed = discord.Embed(
+                title=f"{self.current_boss} contra-atacou!",
+                description=f"{ctx.author.mention} foi derrotado e perdeu {boss['dano_contra_jogador']} pontos de dano acumulado!",
+                color=discord.Color.red()
+            )
+            embed.set_image(url=boss["images"]["attack"])
+            await ctx.send(embed=embed)
+            return
+
+        dano = random.randint(10, 2000)
+        boss["vida"] -= dano
+
+        if boss["vida"] <= 0:
+            embed = discord.Embed(
+                title=f"{self.current_boss} foi derrotado!",
+                description=f"{ctx.author.mention} deu o golpe final! Vocês foram vitoriosos!",
+                color=discord.Color.green()
+            )
+            embed.set_image(url=boss["images"]["defeated"])
+            await ctx.send(embed=embed)
+            await self.dropar_recompensa(ctx.author)
+            self.current_boss = None
+            self.derrotado = asyncio.get_event_loop().time() + 600
+        else:
+            await DatabaseManager.add_damage(player_id, dano)
+            insulto = random.choice(boss["insultos"]).replace("%s", ctx.author.mention)
+            await ctx.send(insulto)
+            embed = discord.Embed(
+                title=f"{ctx.author.mention} atacou {self.current_boss}!",
+                description=f"Causou {dano} de dano. Vida restante de {self.current_boss}: {boss['vida']}",
+                color=discord.Color.orange()
+            )
+            embed.set_image(url=boss["images"]["appear"] if boss["vida"] > boss["vida_maxima"] / 2 else boss["images"]["running"])
+            await ctx.send(embed=embed)
