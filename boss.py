@@ -117,16 +117,42 @@ class BossBattle(commands.Cog):
         }
     }
 
+    ARMAS = [
+        {
+            "nome": "Sniper Boss Rara",
+            "imagem": "https://i.postimg.cc/50hC80DG/DALL-E-2024-10-29-10-21-27-A-rugged-survivor-in-an-apocalyptic-setting-holding-the-Emberium-Snip.webp",
+            "quebrada": "https://i.postimg.cc/mDz9cMpC/DALL-E-2024-10-29-10-23-18-A-rugged-survivor-in-an-apocalyptic-setting-holding-a-completely-shatt.webp",
+            "chance_drop": 0.4,
+            "chance_quebrar": 0.3
+        },
+        {
+            "nome": "Sniper Emberium",
+            "imagem": "https://i.postimg.cc/nh2BNnQj/DALL-E-2024-10-29-10-24-23-A-rugged-survivor-in-an-apocalyptic-setting-confidently-wielding-the.webp",
+            "quebrada": "https://i.postimg.cc/1zzwQbpW/DALL-E-2024-10-29-10-31-58-A-rugged-survivor-in-an-apocalyptic-setting-holding-a-Sniper-Boss-Rar.webp",
+            "chance_drop": 0.5,
+            "chance_quebrar": 0.2
+        },
+        {
+            "nome": "Sniper Damanty",
+            "imagem": "https://i.postimg.cc/qv42mNgH/DALL-E-2024-10-29-10-32-54-A-rugged-survivor-in-an-apocalyptic-setting-confidently-holding-the-S.webp",
+            "quebrada": "https://i.postimg.cc/MGrRKt5z/DALL-E-2024-10-29-10-33-40-A-rugged-survivor-in-an-apocalyptic-setting-holding-a-Sniper-Damanty.webp",
+            "chance_drop": 0.3,
+            "chance_quebrar": 0.25
+        },
+    ]
+
     def __init__(self, bot):
         self.bot = bot
         self.current_boss = None
         self.cooldowns = {}
+        self.fugiu = None
+        self.derrotado = None
         self.spawn_boss_task.start()
         self.auto_message_task.start()
         self.last_auto_message_time = 0
         self.last_insult_time = 0
-        self.auto_message_interval = random.randint(120, 300)  # Intervalo entre 2 a 5 minutos
-        self.insult_interval = random.randint(180, 360)  # Intervalo entre 3 a 6 minutos
+        self.auto_message_interval = random.randint(120, 300)
+        self.insult_interval = random.randint(180, 360)
 
     @tasks.loop(minutes=1)
     async def spawn_boss_task(self):
@@ -150,7 +176,6 @@ class BossBattle(commands.Cog):
     async def auto_message_task(self):
         current_time = time.time()
         
-        # Envia uma mensagem automática se o intervalo de tempo tiver passado
         if self.current_boss and current_time - self.last_auto_message_time > self.auto_message_interval:
             boss = self.BOSSES[self.current_boss]
             message = random.choice(boss["fala"])
@@ -161,7 +186,7 @@ class BossBattle(commands.Cog):
             )
             await self.bot.get_channel(1299092242673303552).send(embed=embed)
             self.last_auto_message_time = current_time
-            self.auto_message_interval = random.randint(120, 300)  # Atualiza o intervalo para próxima mensagem
+            self.auto_message_interval = random.randint(120, 300)
 
     async def atacar_top_jogador(self):
         top_players = await DatabaseManager.get_top_players(10)
@@ -182,7 +207,7 @@ class BossBattle(commands.Cog):
             embed.set_image(url=boss["images"]["attack"])
             await self.bot.get_channel(1299092242673303552).send(embed=embed)
             self.last_insult_time = current_time
-            self.insult_interval = random.randint(180, 360)  # Atualiza o intervalo para o próximo insulto
+            self.insult_interval = random.randint(180, 360)
 
     async def curar_boss(self):
         boss = self.BOSSES[self.current_boss]
@@ -195,18 +220,6 @@ class BossBattle(commands.Cog):
                 color=discord.Color.green()
             )
             await self.bot.get_channel(1299092242673303552).send(embed=embed)
-
-    async def ativar_furia(self):
-        boss = self.BOSSES[self.current_boss]
-        if boss["vida"] <= boss["vida_maxima"] * 0.25 and random.random() < boss["chance_furia"]:
-            boss["chance_curar"] += 0.1
-            embed = discord.Embed(
-                title="💢 Modo Fúria Ativado!",
-                description=f"⚠️ {self.current_boss} entrou em MODO FÚRIA! Preparem-se!",
-                color=discord.Color.dark_red()
-            )
-            await self.bot.get_channel(1299092242673303552).send(embed=embed)
-
 
     async def ativar_furia(self):
         boss = self.BOSSES[self.current_boss]
@@ -266,7 +279,7 @@ class BossBattle(commands.Cog):
             embed.set_image(url=boss["images"]["running"])
             await ctx.send(embed=embed)
             self.current_boss = None
-            self.fugiu = asyncio.get_event_loop().time() + 600
+            self.fugiu = asyncio.get_event_loop().time() + 60
             return
 
         dano = random.randint(10, 2000)
@@ -283,7 +296,7 @@ class BossBattle(commands.Cog):
             await ctx.send(embed=embed)
             await self.dropar_recompensa(ctx.author)
             self.current_boss = None
-            self.derrotado = asyncio.get_event_loop().time() + 600
+            self.derrotado = asyncio.get_event_loop().time() + 60
         else:
             await DatabaseManager.add_damage(player_id, dano)
             insulto = random.choice(boss["insultos"]).replace("%s", ctx.author.mention)
