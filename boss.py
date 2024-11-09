@@ -12,6 +12,7 @@ class BossBattle(commands.Cog):
             "chance_matar_jogador": 0.3,
             "chance_fugir": 0.05,
             "chance_curar": 0.1,
+            "chance_furia": 0.2,
             "dano_contra_jogador": 200,
             "cooldown": 3600,
             "images": {
@@ -31,6 +32,11 @@ class BossBattle(commands.Cog):
                 "⚔️ %s, você luta como uma criança!",
                 "😨 Eu sinto o medo em você, %s.",
                 "💢 Patético, %s! Achei que seria mais difícil."
+            ],
+            "criticos": [
+                "🔥 Emberium enfurecido ataca com fúria!",
+                "⚠️ Emberium está furioso e se fortalece!",
+                "💀 A chama da destruição consome Emberium!"
             ]
         },
         "Boss das Sombras": {
@@ -39,6 +45,7 @@ class BossBattle(commands.Cog):
             "chance_matar_jogador": 0.35,
             "chance_fugir": 0.1,
             "chance_curar": 0.15,
+            "chance_furia": 0.25,
             "dano_contra_jogador": 250,
             "cooldown": 3600,
             "images": {
@@ -58,6 +65,11 @@ class BossBattle(commands.Cog):
                 "🌪️ %s, vai desaparecer no vazio como todos os outros!",
                 "💀 Eu estou em todos os lugares, %s. Sinta o terror crescer!",
                 "🕸️ %s, você parece tão fraco... que decepção."
+            ],
+            "criticos": [
+                "⚫ A sombra se intensifica e o Boss das Sombras absorve força!",
+                "🖤 As trevas se movem, cobrindo tudo!",
+                "🌑 Um frio aterrorizante consome o campo de batalha!"
             ]
         },
         "Mega Boss": {
@@ -66,6 +78,7 @@ class BossBattle(commands.Cog):
             "chance_matar_jogador": 0.4,
             "chance_fugir": 0.05,
             "chance_curar": 0.2,
+            "chance_furia": 0.3,
             "dano_contra_jogador": 280,
             "cooldown": 3600,
             "images": {
@@ -85,6 +98,11 @@ class BossBattle(commands.Cog):
                 "💢 Vou esmagar você como uma barata, %s!",
                 "😈 %s, você é apenas uma sombra do que poderia ser!",
                 "💀 Seu fim está próximo, %s. Apenas aceite a derrota!"
+            ],
+            "criticos": [
+                "💥 Mega Boss emite um grito de fúria, vibrando o solo!",
+                "⚠️ A força do Mega Boss aumenta!",
+                "🔥 O Mega Boss libera um ataque destruidor!"
             ]
         }
     }
@@ -157,7 +175,7 @@ class BossBattle(commands.Cog):
     async def atacar_top_jogador(self):
         top_players = await DatabaseManager.get_top_players(10)
         if top_players:
-            user_id, _ = top_players[0]  # Ataca o jogador no topo do ranking
+            user_id, _ = top_players[0]
             boss = self.BOSSES[self.current_boss]
             dano = random.randint(1, 1000)
             await DatabaseManager.subtract_damage(user_id, dano)
@@ -171,10 +189,33 @@ class BossBattle(commands.Cog):
             embed.set_image(url=boss["images"]["attack"])
             await self.bot.get_channel(1299092242673303552).send(embed=embed)
 
+    async def curar_boss(self):
+        boss = self.BOSSES[self.current_boss]
+        if random.random() < boss["chance_curar"]:
+            cura = random.randint(500, 1500)
+            boss["vida"] = min(boss["vida_maxima"], boss["vida"] + cura)
+            embed = discord.Embed(
+                title="💉 Cura do Boss!",
+                description=f"⚠️ {self.current_boss} se cura e recupera **{cura} de vida**!",
+                color=discord.Color.green()
+            )
+            await self.bot.get_channel(1299092242673303552).send(embed=embed)
+
+    async def ativar_furia(self):
+        boss = self.BOSSES[self.current_boss]
+        if boss["vida"] <= boss["vida_maxima"] * 0.25 and random.random() < boss["chance_furia"]:
+            boss["chance_curar"] += 0.1
+            embed = discord.Embed(
+                title="💢 Modo Fúria Ativado!",
+                description=f"⚠️ {self.current_boss} entrou em MODO FÚRIA! Preparem-se!",
+                color=discord.Color.dark_red()
+            )
+            await self.bot.get_channel(1299092242673303552).send(embed=embed)
+
     async def dropar_recompensa(self, player):
         arma_selecionada = random.choice(self.ARMAS)
         embed = discord.Embed(
-            title="Recompensa do Boss Derrotado",
+            title="🎉 Recompensa do Boss Derrotado",
             color=discord.Color.green()
         )
 
@@ -187,7 +228,7 @@ class BossBattle(commands.Cog):
                 embed.set_image(url=arma_selecionada['imagem'])
             await player.send(embed=embed)
         else:
-            embed.add_field(name="Sem Recompensa", value="Infelizmente, você não recebeu uma arma desta vez.")
+            embed.add_field(name="😢 Sem Recompensa", value="Infelizmente, você não recebeu uma arma desta vez.")
             await player.send(embed=embed)
 
     @commands.command()
@@ -223,6 +264,7 @@ class BossBattle(commands.Cog):
 
         dano = random.randint(10, 2000)
         boss["vida"] -= dano
+        await self.ativar_furia()
 
         if boss["vida"] <= 0:
             embed = discord.Embed(
@@ -245,3 +287,5 @@ class BossBattle(commands.Cog):
             )
             embed.set_image(url=boss["images"]["appear"] if boss["vida"] > boss["vida_maxima"] / 2 else boss["images"]["running"])
             await ctx.send(embed=embed)
+
+        await self.curar_boss()
