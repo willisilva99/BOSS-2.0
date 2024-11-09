@@ -23,24 +23,24 @@ class BossBattle(commands.Cog):
                 "defeated": "https://i.postimg.cc/Kvdnt9hj/DALL-E-2024-10-29-09-41-47-A-dramatic-scene-depicting-a-powerful-zombie-boss-named-Emberium-lyin.webp"
             },
             "fala": [
-                "[🔥][FF4500] Quem ousa enfrentar Emberium, o soberano das chamas da devastação? [-]",
-                "[💀][FF4500] Vocês são apenas cinzas neste mundo em ruínas! [-]",
-                "[☠️][FF4500] Eu sou o fim de todos vocês! [-]",
-                "[😈][FF4500] Vocês gritam em vão! Eu sou inevitável! [-]",
-                "[🔥][FF4500] Queimem, fracos! Vocês são nada! [-]",
-                "[🔥][FF4500] Minhas chamas irão consumir tudo! [-]",
-                "[☠️][FF4500] Este é o seu fim, mortais! [-]"
+                "🔥 Quem ousa enfrentar Emberium, o soberano das chamas da devastação?",
+                "💀 Vocês são apenas cinzas neste mundo em ruínas!",
+                "☠️ Eu sou o fim de todos vocês!",
+                "😈 Vocês gritam em vão! Eu sou inevitável!",
+                "🔥 Queimem, fracos! Vocês são nada!",
+                "🔥 Minhas chamas irão consumir tudo!",
+                "☠️ Este é o seu fim, mortais!"
             ],
             "insultos": [
-                "[⚔️][8B0000] %s, você luta como uma criança! [-]",
-                "[😨][8B0000] Eu sinto o medo em você, %s. [-]",
-                "[💢][8B0000] Patético, %s! Achei que seria mais difícil. [-]",
-                "[🔥][8B0000] Que fracos! Nenhum de vocês merece sobreviver! [-]"
+                "⚔️ %s, você luta como uma criança!",
+                "😨 Eu sinto o medo em você, %s.",
+                "💢 Patético, %s! Achei que seria mais difícil.",
+                "🔥 Que fracos! Nenhum de vocês merece sobreviver!"
             ],
             "criticos": [
-                "[🔥][FF4500] Emberium enfurecido ataca com fúria! [-]",
-                "[⚠️][FF4500] Emberium está furioso e se fortalece! [-]",
-                "[💀][FF4500] A chama da destruição consome Emberium! [-]"
+                "🔥 Emberium enfurecido ataca com fúria!",
+                "⚠️ Emberium está furioso e se fortalece!",
+                "💀 A chama da destruição consome Emberium!"
             ]
         },
         "Boss das Sombras": {
@@ -59,24 +59,24 @@ class BossBattle(commands.Cog):
                 "defeated": "https://i.postimg.cc/x8mLZHKn/DALL-E-2024-10-29-09-47-45-A-dramatic-fantasy-scene-depicting-the-powerful-zombie-boss-named-Shad.webp"
             },
             "fala": [
-                "[🌑][4B0082] Das sombras, eu surjo... preparados para a verdadeira escuridão? [-]",
-                "[👻][4B0082] Vocês são apenas ecos perdidos neste mundo esquecido. [-]",
-                "[🖤][4B0082] Eu sou o pesadelo encarnado! [-]",
-                "[☠️][4B0082] A escuridão consome a todos, inclusive vocês! [-]",
-                "[⚫][4B0082] Vocês nunca escaparão das sombras! [-]",
-                "[👁️][4B0082] Eu vejo seus medos mais profundos! [-]",
-                "[🕸️][4B0082] Todos caem perante a sombra eterna! [-]"
+                "🌑 Das sombras, eu surjo... preparados para a verdadeira escuridão?",
+                "👻 Vocês são apenas ecos perdidos neste mundo esquecido.",
+                "🖤 Eu sou o pesadelo encarnado!",
+                "☠️ A escuridão consome a todos, inclusive vocês!",
+                "⚫ Vocês nunca escaparão das sombras!",
+                "👁️ Eu vejo seus medos mais profundos!",
+                "🕸️ Todos caem perante a sombra eterna!"
             ],
             "insultos": [
-                "[🌪️][483D8B] %s, vai desaparecer no vazio como todos os outros! [-]",
-                "[💀][483D8B] Eu estou em todos os lugares, %s. Sinta o terror crescer! [-]",
-                "[🕸️][483D8B] %s, você parece tão fraco... que decepção. [-]",
-                "[👻][483D8B] Sinto o cheiro do medo, %s! [-]"
+                "🌪️ %s, vai desaparecer no vazio como todos os outros!",
+                "💀 Eu estou em todos os lugares, %s. Sinta o terror crescer!",
+                "🕸️ %s, você parece tão fraco... que decepção.",
+                "👻 Sinto o cheiro do medo, %s!"
             ],
             "criticos": [
-                "[⚫][4B0082] A sombra se intensifica e o Boss das Sombras absorve força! [-]",
-                "[🖤][4B0082] As trevas se movem, cobrindo tudo! [-]",
-                "[🌑][4B0082] Um frio aterrorizante consome o campo de batalha! [-]"
+                "⚫ A sombra se intensifica e o Boss das Sombras absorve força!",
+                "🖤 As trevas se movem, cobrindo tudo!",
+                "🌑 Um frio aterrorizante consome o campo de batalha!"
             ]
         },
         "Mega Boss": {
@@ -95,24 +95,24 @@ class BossBattle(commands.Cog):
                 "defeated": "https://i.postimg.cc/KvL5pXNB/DALL-E-2024-10-29-10-14-38-A-dramatic-fantasy-scene-depicting-the-powerful-zombie-boss-named-Mega.webp"
             },
             "fala": [
-                "[💥][DC143C] Eu sou o colosso, o peso de um mundo destruído! [-]",
-                "[⚠️][DC143C] Preparem-se para o colapso absoluto! [-]",
-                "[👹][DC143C] Perdidos e fracos... vocês não são nada diante de mim! [-]",
-                "[🔥][DC143C] Vocês acham que podem me vencer? Seus esforços são patéticos! [-]",
-                "[⚔️][DC143C] Preparem-se para serem esmagados, mortais. [-]",
-                "[💢][DC143C] Eu sou a tempestade que varre tudo! [-]",
-                "[💀][DC143C] Este é o seu último suspiro! [-]"
+                "💥 Eu sou o colosso, o peso de um mundo destruído!",
+                "⚠️ Preparem-se para o colapso absoluto!",
+                "👹 Perdidos e fracos... vocês não são nada diante de mim!",
+                "🔥 Vocês acham que podem me vencer? Seus esforços são patéticos!",
+                "⚔️ Preparem-se para serem esmagados, mortais.",
+                "💢 Eu sou a tempestade que varre tudo!",
+                "💀 Este é o seu último suspiro!"
             ],
             "insultos": [
-                "[💢][B22222] Vou esmagar você como uma barata, %s! [-]",
-                "[😈][B22222] %s, você é apenas uma sombra do que poderia ser! [-]",
-                "[💀][B22222] Seu fim está próximo, %s. Apenas aceite a derrota! [-]",
-                "[💥][B22222] Nem a sua coragem pode salvá-lo, %s! [-]"
+                "💢 Vou esmagar você como uma barata, %s!",
+                "😈 %s, você é apenas uma sombra do que poderia ser!",
+                "💀 Seu fim está próximo, %s. Apenas aceite a derrota!",
+                "💥 Nem a sua coragem pode salvá-lo, %s!"
             ],
             "criticos": [
-                "[💥][DC143C] Mega Boss emite um grito de fúria, vibrando o solo! [-]",
-                "[⚠️][DC143C] A força do Mega Boss aumenta! [-]",
-                "[🔥][DC143C] O Mega Boss libera um ataque destruidor! [-]"
+                "💥 Mega Boss emite um grito de fúria, vibrando o solo!",
+                "⚠️ A força do Mega Boss aumenta!",
+                "🔥 O Mega Boss libera um ataque destruidor!"
             ]
         }
     }
@@ -163,7 +163,7 @@ class BossBattle(commands.Cog):
         boss = self.BOSSES[self.current_boss]
         boss["vida"] = boss["vida_maxima"]
         embed = discord.Embed(
-            title=f"⚠️ [FF4500]{self.current_boss} apareceu! [-]",
+            title=f"{self.current_boss} apareceu!",
             description=random.choice(boss["fala"]).replace("%s", "todos os jogadores!"),
             color=discord.Color.red()
         )
@@ -201,7 +201,7 @@ class BossBattle(commands.Cog):
             insulto = random.choice(boss["insultos"]).replace("%s", f"<@{user_id}>")
             embed = discord.Embed(
                 title=f"{self.current_boss} ataca o Top 1!",
-                description=f"{insulto}\n\n<@{user_id}> sofreu **{dano} de dano**!",
+                description=f"{insulto}\n\n<@{user_id}> sofreu {dano} de dano!",
                 color=discord.Color.red()
             )
             embed.set_image(url=boss["images"]["attack"])
@@ -215,8 +215,8 @@ class BossBattle(commands.Cog):
             cura = random.randint(500, 1500)
             boss["vida"] = min(boss["vida_maxima"], boss["vida"] + cura)
             embed = discord.Embed(
-                title="💉 Cura do Boss!",
-                description=f"⚠️ {self.current_boss} se cura e recupera **{cura} de vida**!",
+                title="Cura do Boss!",
+                description=f"{self.current_boss} se cura e recupera {cura} de vida!",
                 color=discord.Color.green()
             )
             await self.bot.get_channel(1299092242673303552).send(embed=embed)
@@ -226,8 +226,8 @@ class BossBattle(commands.Cog):
         if boss["vida"] <= boss["vida_maxima"] * 0.25 and random.random() < boss["chance_furia"]:
             boss["chance_curar"] += 0.1
             embed = discord.Embed(
-                title="💢 Modo Fúria Ativado!",
-                description=f"⚠️ {self.current_boss} entrou em MODO FÚRIA! Preparem-se!",
+                title="Modo Fúria Ativado!",
+                description=f"{self.current_boss} entrou em MODO FÚRIA! Preparem-se!",
                 color=discord.Color.dark_red()
             )
             await self.bot.get_channel(1299092242673303552).send(embed=embed)
@@ -235,20 +235,20 @@ class BossBattle(commands.Cog):
     async def dropar_recompensa(self, player):
         arma_selecionada = random.choice(self.ARMAS)
         embed = discord.Embed(
-            title="🎉 Recompensa do Boss Derrotado",
+            title="Recompensa do Boss Derrotado",
             color=discord.Color.green()
         )
 
         if random.random() <= arma_selecionada["chance_drop"]:
             if random.random() <= arma_selecionada["chance_quebrar"]:
-                embed.add_field(name="⚔️ Arma Quebrada!", value=f"Você recebeu uma **{arma_selecionada['nome']}**, mas ela está quebrada!")
+                embed.add_field(name="Arma Quebrada!", value=f"Você recebeu uma {arma_selecionada['nome']}, mas ela está quebrada!")
                 embed.set_image(url=arma_selecionada['quebrada'])
             else:
-                embed.add_field(name="🏆 Arma Recebida!", value=f"Você recebeu uma **{arma_selecionada['nome']}** em perfeito estado!")
+                embed.add_field(name="Arma Recebida!", value=f"Você recebeu uma {arma_selecionada['nome']} em perfeito estado!")
                 embed.set_image(url=arma_selecionada['imagem'])
             await player.send(embed=embed)
         else:
-            embed.add_field(name="😢 Sem Recompensa", value="Infelizmente, você não recebeu uma arma desta vez.")
+            embed.add_field(name="Sem Recompensa", value="Infelizmente, você não recebeu uma arma desta vez.")
             await player.send(embed=embed)
 
     @commands.command()
@@ -256,7 +256,7 @@ class BossBattle(commands.Cog):
         if self.current_boss:
             await self._atacar_boss_normal(ctx)
         else:
-            await ctx.send("⚠️ Nenhum boss ativo no momento. Aguarde o próximo surgimento.")
+            await ctx.send("Nenhum boss ativo no momento. Aguarde o próximo surgimento.")
 
     async def _atacar_boss_normal(self, ctx):
         boss = self.BOSSES[self.current_boss]
@@ -265,7 +265,7 @@ class BossBattle(commands.Cog):
 
         if player_id in self.cooldowns and (self.cooldowns[player_id] + boss["cooldown"]) > current_time:
             time_left = int((self.cooldowns[player_id] + boss["cooldown"] - current_time) / 60)
-            await ctx.send(f"⏳ {ctx.author.mention} você está em cooldown! Espere mais {time_left} minutos para atacar novamente.")
+            await ctx.send(f"{ctx.author.mention} você está em cooldown! Espere mais {time_left} minutos para atacar novamente.")
             return
 
         self.cooldowns[player_id] = current_time
