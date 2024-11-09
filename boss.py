@@ -3,6 +3,7 @@ import asyncio
 from discord.ext import commands, tasks
 from database import DatabaseManager
 import discord
+import time
 
 class BossBattle(commands.Cog):
     BOSSES = {
@@ -22,21 +23,24 @@ class BossBattle(commands.Cog):
                 "defeated": "https://i.postimg.cc/Kvdnt9hj/DALL-E-2024-10-29-09-41-47-A-dramatic-scene-depicting-a-powerful-zombie-boss-named-Emberium-lyin.webp"
             },
             "fala": [
-                "🔥 Quem ousa enfrentar Emberium, o soberano das chamas da devastação?",
-                "💀 Vocês são apenas cinzas neste mundo em ruínas!",
-                "☠️ Eu sou o fim de todos vocês!",
-                "😈 Vocês gritam em vão! Eu sou inevitável.",
-                "🔥 Queimem, fracos! Vocês são nada!"
+                "[🔥][FF4500] Quem ousa enfrentar Emberium, o soberano das chamas da devastação? [-]",
+                "[💀][FF4500] Vocês são apenas cinzas neste mundo em ruínas! [-]",
+                "[☠️][FF4500] Eu sou o fim de todos vocês! [-]",
+                "[😈][FF4500] Vocês gritam em vão! Eu sou inevitável! [-]",
+                "[🔥][FF4500] Queimem, fracos! Vocês são nada! [-]",
+                "[🔥][FF4500] Minhas chamas irão consumir tudo! [-]",
+                "[☠️][FF4500] Este é o seu fim, mortais! [-]"
             ],
             "insultos": [
-                "⚔️ %s, você luta como uma criança!",
-                "😨 Eu sinto o medo em você, %s.",
-                "💢 Patético, %s! Achei que seria mais difícil."
+                "[⚔️][8B0000] %s, você luta como uma criança! [-]",
+                "[😨][8B0000] Eu sinto o medo em você, %s. [-]",
+                "[💢][8B0000] Patético, %s! Achei que seria mais difícil. [-]",
+                "[🔥][8B0000] Que fracos! Nenhum de vocês merece sobreviver! [-]"
             ],
             "criticos": [
-                "🔥 Emberium enfurecido ataca com fúria!",
-                "⚠️ Emberium está furioso e se fortalece!",
-                "💀 A chama da destruição consome Emberium!"
+                "[🔥][FF4500] Emberium enfurecido ataca com fúria! [-]",
+                "[⚠️][FF4500] Emberium está furioso e se fortalece! [-]",
+                "[💀][FF4500] A chama da destruição consome Emberium! [-]"
             ]
         },
         "Boss das Sombras": {
@@ -55,21 +59,24 @@ class BossBattle(commands.Cog):
                 "defeated": "https://i.postimg.cc/x8mLZHKn/DALL-E-2024-10-29-09-47-45-A-dramatic-fantasy-scene-depicting-the-powerful-zombie-boss-named-Shad.webp"
             },
             "fala": [
-                "🌑 Das sombras, eu surjo... preparados para a verdadeira escuridão?",
-                "👻 Vocês são apenas ecos perdidos neste mundo esquecido.",
-                "🖤 Eu sou o pesadelo encarnado!",
-                "☠️ A escuridão consome a todos, inclusive vocês!",
-                "⚫ Vocês nunca escaparão das sombras!"
+                "[🌑][4B0082] Das sombras, eu surjo... preparados para a verdadeira escuridão? [-]",
+                "[👻][4B0082] Vocês são apenas ecos perdidos neste mundo esquecido. [-]",
+                "[🖤][4B0082] Eu sou o pesadelo encarnado! [-]",
+                "[☠️][4B0082] A escuridão consome a todos, inclusive vocês! [-]",
+                "[⚫][4B0082] Vocês nunca escaparão das sombras! [-]",
+                "[👁️][4B0082] Eu vejo seus medos mais profundos! [-]",
+                "[🕸️][4B0082] Todos caem perante a sombra eterna! [-]"
             ],
             "insultos": [
-                "🌪️ %s, vai desaparecer no vazio como todos os outros!",
-                "💀 Eu estou em todos os lugares, %s. Sinta o terror crescer!",
-                "🕸️ %s, você parece tão fraco... que decepção."
+                "[🌪️][483D8B] %s, vai desaparecer no vazio como todos os outros! [-]",
+                "[💀][483D8B] Eu estou em todos os lugares, %s. Sinta o terror crescer! [-]",
+                "[🕸️][483D8B] %s, você parece tão fraco... que decepção. [-]",
+                "[👻][483D8B] Sinto o cheiro do medo, %s! [-]"
             ],
             "criticos": [
-                "⚫ A sombra se intensifica e o Boss das Sombras absorve força!",
-                "🖤 As trevas se movem, cobrindo tudo!",
-                "🌑 Um frio aterrorizante consome o campo de batalha!"
+                "[⚫][4B0082] A sombra se intensifica e o Boss das Sombras absorve força! [-]",
+                "[🖤][4B0082] As trevas se movem, cobrindo tudo! [-]",
+                "[🌑][4B0082] Um frio aterrorizante consome o campo de batalha! [-]"
             ]
         },
         "Mega Boss": {
@@ -88,48 +95,27 @@ class BossBattle(commands.Cog):
                 "defeated": "https://i.postimg.cc/KvL5pXNB/DALL-E-2024-10-29-10-14-38-A-dramatic-fantasy-scene-depicting-the-powerful-zombie-boss-named-Mega.webp"
             },
             "fala": [
-                "💥 Eu sou o colosso, o peso de um mundo destruído!",
-                "⚠️ Preparem-se para o colapso absoluto!",
-                "👹 Perdidos e fracos... vocês não são nada diante de mim!",
-                "🔥 Vocês acham que podem me vencer? Seus esforços são patéticos!",
-                "⚔️ Preparem-se para serem esmagados, mortais."
+                "[💥][DC143C] Eu sou o colosso, o peso de um mundo destruído! [-]",
+                "[⚠️][DC143C] Preparem-se para o colapso absoluto! [-]",
+                "[👹][DC143C] Perdidos e fracos... vocês não são nada diante de mim! [-]",
+                "[🔥][DC143C] Vocês acham que podem me vencer? Seus esforços são patéticos! [-]",
+                "[⚔️][DC143C] Preparem-se para serem esmagados, mortais. [-]",
+                "[💢][DC143C] Eu sou a tempestade que varre tudo! [-]",
+                "[💀][DC143C] Este é o seu último suspiro! [-]"
             ],
             "insultos": [
-                "💢 Vou esmagar você como uma barata, %s!",
-                "😈 %s, você é apenas uma sombra do que poderia ser!",
-                "💀 Seu fim está próximo, %s. Apenas aceite a derrota!"
+                "[💢][B22222] Vou esmagar você como uma barata, %s! [-]",
+                "[😈][B22222] %s, você é apenas uma sombra do que poderia ser! [-]",
+                "[💀][B22222] Seu fim está próximo, %s. Apenas aceite a derrota! [-]",
+                "[💥][B22222] Nem a sua coragem pode salvá-lo, %s! [-]"
             ],
             "criticos": [
-                "💥 Mega Boss emite um grito de fúria, vibrando o solo!",
-                "⚠️ A força do Mega Boss aumenta!",
-                "🔥 O Mega Boss libera um ataque destruidor!"
+                "[💥][DC143C] Mega Boss emite um grito de fúria, vibrando o solo! [-]",
+                "[⚠️][DC143C] A força do Mega Boss aumenta! [-]",
+                "[🔥][DC143C] O Mega Boss libera um ataque destruidor! [-]"
             ]
         }
     }
-
-    ARMAS = [
-        {
-            "nome": "Sniper Boss Rara",
-            "imagem": "https://i.postimg.cc/50hC80DG/DALL-E-2024-10-29-10-21-27-A-rugged-survivor-in-an-apocalyptic-setting-holding-the-Emberium-Snip.webp",
-            "quebrada": "https://i.postimg.cc/mDz9cMpC/DALL-E-2024-10-29-10-23-18-A-rugged-survivor-in-an-apocalyptic-setting-holding-a-completely-shatt.webp",
-            "chance_drop": 0.4,
-            "chance_quebrar": 0.3
-        },
-        {
-            "nome": "Sniper Emberium",
-            "imagem": "https://i.postimg.cc/nh2BNnQj/DALL-E-2024-10-29-10-24-23-A-rugged-survivor-in-an-apocalyptic-setting-confidently-wielding-the.webp",
-            "quebrada": "https://i.postimg.cc/1zzwQbpW/DALL-E-2024-10-29-10-31-58-A-rugged-survivor-in-an-apocalyptic-setting-holding-a-Sniper-Boss-Rar.webp",
-            "chance_drop": 0.5,
-            "chance_quebrar": 0.2
-        },
-        {
-            "nome": "Sniper Damanty",
-            "imagem": "https://i.postimg.cc/qv42mNgH/DALL-E-2024-10-29-10-32-54-A-rugged-survivor-in-an-apocalyptic-setting-confidently-holding-the-S.webp",
-            "quebrada": "https://i.postimg.cc/MGrRKt5z/DALL-E-2024-10-29-10-33-40-A-rugged-survivor-in-an-apocalyptic-setting-holding-a-Sniper-Damanty.webp",
-            "chance_drop": 0.3,
-            "chance_quebrar": 0.25
-        },
-    ]
 
     def __init__(self, bot):
         self.bot = bot
@@ -137,8 +123,10 @@ class BossBattle(commands.Cog):
         self.cooldowns = {}
         self.spawn_boss_task.start()
         self.auto_message_task.start()
-        self.fugiu = None
-        self.derrotado = None
+        self.last_auto_message_time = 0
+        self.last_insult_time = 0
+        self.auto_message_interval = random.randint(120, 300)  # Intervalo entre 2 a 5 minutos
+        self.insult_interval = random.randint(180, 360)  # Intervalo entre 3 a 6 minutos
 
     @tasks.loop(minutes=1)
     async def spawn_boss_task(self):
@@ -149,7 +137,7 @@ class BossBattle(commands.Cog):
         boss = self.BOSSES[self.current_boss]
         boss["vida"] = boss["vida_maxima"]
         embed = discord.Embed(
-            title=f"⚠️ {self.current_boss} apareceu!",
+            title=f"⚠️ [FF4500]{self.current_boss} apareceu! [-]",
             description=random.choice(boss["fala"]).replace("%s", "todos os jogadores!"),
             color=discord.Color.red()
         )
@@ -160,21 +148,26 @@ class BossBattle(commands.Cog):
 
     @tasks.loop(seconds=30)
     async def auto_message_task(self):
-        if not self.current_boss:
-            return
+        current_time = time.time()
         
-        boss = self.BOSSES[self.current_boss]
-        message = random.choice(boss["fala"])
-        embed = discord.Embed(
-            title=f"{self.current_boss} fala:",
-            description=message,
-            color=discord.Color.dark_red()
-        )
-        await self.bot.get_channel(1299092242673303552).send(embed=embed)
+        # Envia uma mensagem automática se o intervalo de tempo tiver passado
+        if self.current_boss and current_time - self.last_auto_message_time > self.auto_message_interval:
+            boss = self.BOSSES[self.current_boss]
+            message = random.choice(boss["fala"])
+            embed = discord.Embed(
+                title=f"{self.current_boss} fala:",
+                description=message,
+                color=discord.Color.dark_red()
+            )
+            await self.bot.get_channel(1299092242673303552).send(embed=embed)
+            self.last_auto_message_time = current_time
+            self.auto_message_interval = random.randint(120, 300)  # Atualiza o intervalo para próxima mensagem
 
     async def atacar_top_jogador(self):
         top_players = await DatabaseManager.get_top_players(10)
-        if top_players:
+        current_time = time.time()
+
+        if top_players and current_time - self.last_insult_time > self.insult_interval:
             user_id, _ = top_players[0]
             boss = self.BOSSES[self.current_boss]
             dano = random.randint(1, 1000)
@@ -188,6 +181,8 @@ class BossBattle(commands.Cog):
             )
             embed.set_image(url=boss["images"]["attack"])
             await self.bot.get_channel(1299092242673303552).send(embed=embed)
+            self.last_insult_time = current_time
+            self.insult_interval = random.randint(180, 360)  # Atualiza o intervalo para o próximo insulto
 
     async def curar_boss(self):
         boss = self.BOSSES[self.current_boss]
@@ -200,6 +195,18 @@ class BossBattle(commands.Cog):
                 color=discord.Color.green()
             )
             await self.bot.get_channel(1299092242673303552).send(embed=embed)
+
+    async def ativar_furia(self):
+        boss = self.BOSSES[self.current_boss]
+        if boss["vida"] <= boss["vida_maxima"] * 0.25 and random.random() < boss["chance_furia"]:
+            boss["chance_curar"] += 0.1
+            embed = discord.Embed(
+                title="💢 Modo Fúria Ativado!",
+                description=f"⚠️ {self.current_boss} entrou em MODO FÚRIA! Preparem-se!",
+                color=discord.Color.dark_red()
+            )
+            await self.bot.get_channel(1299092242673303552).send(embed=embed)
+
 
     async def ativar_furia(self):
         boss = self.BOSSES[self.current_boss]
