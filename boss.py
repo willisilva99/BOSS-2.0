@@ -156,7 +156,6 @@ class BossBattle(commands.Cog):
         self.auto_message_interval = random.randint(3000, 3600)  # 50 a 60 minutos
         self.insult_interval = random.randint(3000, 3600)  # 50 a 60 minutos
 
-    
     @tasks.loop(minutes=1)
     async def spawn_boss_task(self):
         if self.current_boss or (self.fugiu and asyncio.get_event_loop().time() < self.fugiu) or (self.derrotado and asyncio.get_event_loop().time() < self.derrotado):
@@ -179,6 +178,7 @@ class BossBattle(commands.Cog):
     async def auto_message_task(self):
         current_time = time.time()
         
+        # Envia uma mensagem automática se o intervalo de tempo tiver passado
         if self.current_boss and current_time - self.last_auto_message_time > self.auto_message_interval:
             boss = self.BOSSES[self.current_boss]
             message = random.choice(boss["fala"])
@@ -189,7 +189,7 @@ class BossBattle(commands.Cog):
             )
             await self.bot.get_channel(1299092242673303552).send(embed=embed)
             self.last_auto_message_time = current_time
-            self.auto_message_interval = random.randint(120, 300)
+            self.auto_message_interval = random.randint(3000, 3600)  # Mantém o intervalo entre 50 a 60 minutos
 
     async def atacar_top_jogador(self):
         top_players = await DatabaseManager.get_top_players(10)
@@ -210,7 +210,7 @@ class BossBattle(commands.Cog):
             embed.set_image(url=boss["images"]["attack"])
             await self.bot.get_channel(1299092242673303552).send(embed=embed)
             self.last_insult_time = current_time
-            self.insult_interval = random.randint(180, 360)
+            self.insult_interval = random.randint(3000, 3600)  # Mantém o intervalo entre 50 a 60 minutos
 
     async def curar_boss(self):
         boss = self.BOSSES[self.current_boss]
