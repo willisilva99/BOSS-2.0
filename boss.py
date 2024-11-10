@@ -152,10 +152,11 @@ class BossBattle(commands.Cog):
         self.last_auto_message_time = 0
         self.last_insult_time = 0
         
-        # Intervalo ajustado para 10 minutos (600 segundos) entre mensagens automáticas e insultos
-        self.auto_message_interval = random.randint(600, 900)  # 10 a 15 minutos
-        self.insult_interval = random.randint(600, 900)  # 10 a 15 minutos
-        
+        # Intervalo ajustado para 50 a 60 minutos (3000 a 3600 segundos)
+        self.auto_message_interval = random.randint(3000, 3600)  # 50 a 60 minutos
+        self.insult_interval = random.randint(3000, 3600)  # 50 a 60 minutos
+
+    
     @tasks.loop(minutes=1)
     async def spawn_boss_task(self):
         if self.current_boss or (self.fugiu and asyncio.get_event_loop().time() < self.fugiu) or (self.derrotado and asyncio.get_event_loop().time() < self.derrotado):
